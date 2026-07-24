@@ -9,6 +9,7 @@ import AddStudent from "./pages/AddStudent";
 import Batches from "./pages/Batches";
 import StudentDetail from "./pages/StudentDetail";
 import Enquiries from "./pages/Enquiries";
+import Attendance from "./pages/Attendance";
 
 function App() {
   return (
@@ -62,6 +63,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <Enquiries />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/attendance"
+            element={
+              <ProtectedRoute>
+                <Attendance />
               </ProtectedRoute>
             }
           />

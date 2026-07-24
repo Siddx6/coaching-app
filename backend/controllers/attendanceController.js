@@ -7,7 +7,7 @@ const markAttendance = async (req, res) => {
     const record = await Attendance.findOneAndUpdate(
       { student, batch, date },
       { student, batch, date, status },
-      { upsert: true, new: true }
+      { upsert: true, returnDocument: "after" }
     );
 
     res.status(201).json(record);

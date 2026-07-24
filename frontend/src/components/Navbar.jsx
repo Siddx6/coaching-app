@@ -33,6 +33,9 @@ function Navbar() {
         <Link to="/enquiries" className={linkClass("/enquiries")}>
           Enquiries
         </Link>
+        <Link to="/attendance" className={linkClass("/attendance")}>
+          Attendance
+        </Link>
       </div>
       <div className="flex items-center gap-4">
         <span className="text-sm text-gray-500">{user.name} ({user.role})</span>
