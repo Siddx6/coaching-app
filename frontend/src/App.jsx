@@ -10,6 +10,7 @@ import Batches from "./pages/Batches";
 import StudentDetail from "./pages/StudentDetail";
 import Enquiries from "./pages/Enquiries";
 import Attendance from "./pages/Attendance";
+import Expenses from "./pages/Expenses";
 
 function App() {
   return (
@@ -71,6 +72,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <Attendance />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/expenses"
+            element={
+              <ProtectedRoute>
+                <Expenses />
               </ProtectedRoute>
             }
           />
