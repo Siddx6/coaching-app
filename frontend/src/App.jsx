@@ -11,6 +11,7 @@ import StudentDetail from "./pages/StudentDetail";
 import Enquiries from "./pages/Enquiries";
 import Attendance from "./pages/Attendance";
 import Expenses from "./pages/Expenses";
+import AdminUsers from "./pages/AdminUsers";
 
 function App() {
   return (
@@ -80,6 +81,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <Expenses />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/users"
+            element={
+              <ProtectedRoute>
+                <AdminUsers />
               </ProtectedRoute>
             }
           />
