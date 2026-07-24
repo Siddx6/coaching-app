@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../services/api";
 
@@ -17,6 +17,11 @@ function AddStudent() {
   const [photo, setPhoto] = useState(null);
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const [batches, setBatches] = useState([]);
+
+  useEffect(() => {
+    api.get("/batches").then((res) => setBatches(res.data));
+  }, []);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -120,15 +125,21 @@ function AddStudent() {
         </div>
 
         <div>
-          <label className="block text-sm text-gray-600 mb-1">Batch ID</label>
-          <input
+          <label className="block text-sm text-gray-600 mb-1">Batch</label>
+          <select
             name="batch"
             value={form.batch}
             onChange={handleChange}
             className="w-full border rounded px-3 py-2"
-            placeholder="Paste Batch _id for now"
             required
-          />
+          >
+            <option value="">Select a batch</option>
+            {batches.map((b) => (
+              <option key={b._id} value={b._id}>
+                {b.name} (₹{b.monthlyFee}/mo)
+              </option>
+            ))}
+          </select>
         </div>
 
         <div>
