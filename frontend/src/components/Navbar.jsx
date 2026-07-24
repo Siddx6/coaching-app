@@ -42,6 +42,9 @@ function Navbar() {
         <Link to="/admin/users" className={linkClass("/admin/users")}>
           Users
         </Link>
+        <Link to="/reports" className={linkClass("/reports")}>
+          Reports
+        </Link>
       </div>
       <div className="flex items-center gap-4">
         <span className="text-sm text-gray-500">{user.name} ({user.role})</span>
