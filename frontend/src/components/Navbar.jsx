@@ -27,6 +27,9 @@ function Navbar() {
         <Link to="/students/add" className={linkClass("/students/add")}>
           Add Student
         </Link>
+        <Link to="/batches" className={linkClass("/batches")}>
+          Batches
+        </Link>
       </div>
       <div className="flex items-center gap-4">
         <span className="text-sm text-gray-500">{user.name} ({user.role})</span>

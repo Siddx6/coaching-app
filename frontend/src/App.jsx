@@ -6,6 +6,7 @@ import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import Students from "./pages/Students";
 import AddStudent from "./pages/AddStudent";
+import Batches from "./pages/Batches";
 
 function App() {
   return (
@@ -35,6 +36,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <AddStudent />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/batches"
+            element={
+              <ProtectedRoute>
+                <Batches />
               </ProtectedRoute>
             }
           />
