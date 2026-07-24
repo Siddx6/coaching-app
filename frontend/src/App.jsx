@@ -8,6 +8,7 @@ import Students from "./pages/Students";
 import AddStudent from "./pages/AddStudent";
 import Batches from "./pages/Batches";
 import StudentDetail from "./pages/StudentDetail";
+import Enquiries from "./pages/Enquiries";
 
 function App() {
   return (
@@ -53,6 +54,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <Batches />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/enquiries"
+            element={
+              <ProtectedRoute>
+                <Enquiries />
               </ProtectedRoute>
             }
           />
