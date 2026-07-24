@@ -7,6 +7,7 @@ import Dashboard from "./pages/Dashboard";
 import Students from "./pages/Students";
 import AddStudent from "./pages/AddStudent";
 import Batches from "./pages/Batches";
+import StudentDetail from "./pages/StudentDetail";
 
 function App() {
   return (
@@ -36,6 +37,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <AddStudent />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/students/:id"
+            element={
+              <ProtectedRoute>
+                <StudentDetail />
               </ProtectedRoute>
             }
           />

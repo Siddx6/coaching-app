@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import api from "../services/api";
 
 function Students() {
+  const navigate = useNavigate();
   const [students, setStudents] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -25,7 +27,11 @@ function Students() {
       ) : (
         <div className="grid gap-4">
           {students.map((s) => (
-            <div key={s._id} className="bg-white p-4 rounded shadow flex justify-between items-center">
+            <div
+              key={s._id}
+              onClick={() => navigate(`/students/${s._id}`)}
+              className="bg-white p-4 rounded shadow flex justify-between items-center cursor-pointer hover:bg-purple-50"
+            >
               <div>
                 <p className="font-semibold">{s.name}</p>
                 <p className="text-sm text-gray-500">
