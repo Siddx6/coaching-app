@@ -19,6 +19,7 @@ function App() {
     <AuthProvider>
       <BrowserRouter>
         <Navbar />
+        <div className="ml-60">
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route
@@ -103,6 +104,7 @@ function App() {
           />
           <Route path="*" element={<Navigate to="/login" replace />} />
         </Routes>
+        </div>
       </BrowserRouter>
     </AuthProvider>
   );
