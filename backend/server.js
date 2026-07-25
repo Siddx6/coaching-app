@@ -1,7 +1,9 @@
 require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
+const cron = require("node-cron");
 const connectDB = require("./config/db");
+const Student = require("./models/Student");
 const authRoutes = require("./routes/authRoutes");
 const courseRoutes = require("./routes/courseRoutes");
 const subCourseRoutes = require("./routes/subCourseRoutes");
@@ -36,6 +38,21 @@ app.use("/api/admin", adminRoutes);
 
 app.get("/", (req, res) => {
   res.send("Coaching App API is running");
+});
+
+// Runs once every day at midnight — checks for students whose endDate has passed
+cron.schedule("0 0 * * *", async () => {
+  try {
+    const result = await Student.updateMany(
+      { endDate: { $lt: new Date() }, status: { $ne: "expired" } },
+      { status: "expired" }
+    );
+    if (result.modifiedCount > 0) {
+      console.log(`Marked ${result.modifiedCount} student(s) as expired`);
+    }
+  } catch (err) {
+    console.error("Expiry check failed:", err.message);
+  }
 });
 
 const PORT = process.env.PORT || 5000;

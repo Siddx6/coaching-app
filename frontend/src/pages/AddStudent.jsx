@@ -14,6 +14,7 @@ function AddStudent() {
     address: "",
     batch: "",
     joinDate: "",
+    endDate: "",
   });
   const [photo, setPhoto] = useState(null);
   const [photoPreview, setPhotoPreview] = useState(null);
@@ -159,6 +160,17 @@ function AddStudent() {
               type="date"
               name="joinDate"
               value={form.joinDate}
+              onChange={handleChange}
+              className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-indigo-500"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-500 mb-1.5">End Date</label>
+            <input
+              type="date"
+              name="endDate"
+              value={form.endDate}
               onChange={handleChange}
               className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-indigo-500"
             />
