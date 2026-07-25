@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import api from "../services/api";
-import { ArrowLeft, Phone, Mail, Receipt } from "lucide-react";
+import { ArrowLeft, Phone, Mail, Receipt, Trash2 } from "lucide-react";
 
 function StudentDetail() {
   const { id } = useParams();
@@ -40,19 +40,34 @@ function StudentDetail() {
     }
   };
 
+  const handleDeleteStudent = async () => {
+    if (!window.confirm(`Delete ${student.name}? This cannot be undone.`)) return;
+    await api.delete(`/students/${id}`);
+    navigate("/students");
+  };
+
   if (!student) return <div className="p-8">Loading...</div>;
 
   const latestDue = payments[0]?.dueAmount ?? 0;
 
   return (
     <div className="min-h-screen bg-gray-50 p-8">
-      <button
-        onClick={() => navigate("/students")}
-        className="flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-700 mb-6"
-      >
-        <ArrowLeft size={16} />
-        Back to Students
-      </button>
+      <div className="flex items-center justify-between mb-6">
+        <button
+          onClick={() => navigate("/students")}
+          className="flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-700"
+        >
+          <ArrowLeft size={16} />
+          Back to Students
+        </button>
+        <button
+          onClick={handleDeleteStudent}
+          className="flex items-center gap-1.5 text-sm text-red-600 hover:text-red-700"
+        >
+          <Trash2 size={15} />
+          Delete Student
+        </button>
+      </div>
 
       <div className="bg-white rounded-2xl border border-gray-100 p-6 mb-6 flex items-center gap-5">
         {student.photoUrl ? (
