@@ -1,19 +1,38 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../services/api";
-import { Search, Phone } from "lucide-react";
+import { Search, Phone, DollarSign, Pencil } from "lucide-react";
 
 function Students() {
   const navigate = useNavigate();
   const [students, setStudents] = useState([]);
+  const [dues, setDues] = useState({});
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
 
   useEffect(() => {
-    api
-      .get("/students")
-      .then((res) => setStudents(res.data))
-      .finally(() => setLoading(false));
+    api.get("/students").then(async (res) => {
+      setStudents(res.data);
+      setLoading(false);
+
+      const dueMap = {};
+      await Promise.all(
+        res.data.map(async (s) => {
+          try {
+            const paymentsRes = await api.get(`/payments/student/${s._id}`);
+            const latest = paymentsRes.data[0];
+            dueMap[s._id] = {
+              paid: latest?.paidAmount ?? 0,
+              due: latest?.dueAmount ?? 0,
+              total: latest?.totalFee ?? 0,
+            };
+          } catch {
+            dueMap[s._id] = { paid: 0, due: 0, total: 0 };
+          }
+        })
+      );
+      setDues(dueMap);
+    });
   }, []);
 
   const filtered = students.filter(
@@ -51,48 +70,86 @@ function Students() {
       ) : filtered.length === 0 ? (
         <p className="text-gray-400">No students found.</p>
       ) : (
-        <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden">
-          {filtered.map((s, i) => (
-            <div
-              key={s._id}
-              onClick={() => navigate(`/students/${s._id}`)}
-              className={`flex items-center justify-between px-6 py-4 cursor-pointer hover:bg-gray-50 transition ${
-                i !== filtered.length - 1 ? "border-b border-gray-100" : ""
-              }`}
-            >
-              <div className="flex items-center gap-4">
-                {s.photoUrl ? (
-                  <img
-                    src={s.photoUrl}
-                    alt={s.name}
-                    className="w-11 h-11 rounded-full object-cover"
-                  />
-                ) : (
-                  <div className="w-11 h-11 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-700 font-semibold">
-                    {s.name?.[0]}
+        <div className="grid gap-4">
+          {filtered.map((s) => {
+            const d = dues[s._id] || { paid: 0, due: 0, total: 0 };
+            return (
+              <div key={s._id} className="bg-white rounded-2xl border border-gray-100 p-5">
+                <div className="flex items-start justify-between mb-4">
+                  <div className="flex items-center gap-4">
+                    {s.photoUrl ? (
+                      <img
+                        src={s.photoUrl}
+                        alt={s.name}
+                        className="w-14 h-14 rounded-full object-cover"
+                      />
+                    ) : (
+                      <div className="w-14 h-14 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-700 font-semibold text-lg">
+                        {s.name?.[0]}
+                      </div>
+                    )}
+                    <div>
+                      <p className="font-semibold text-gray-900">{s.name}</p>
+                      <p className="text-xs text-gray-400 mb-1">{s.memberId}</p>
+                      {s.mobile && (
+                        <div className="flex items-center gap-1.5 text-sm text-gray-500">
+                          <Phone size={13} />
+                          {s.mobile}
+                        </div>
+                      )}
+                    </div>
                   </div>
-                )}
-                <div>
-                  <p className="font-semibold text-gray-900 text-sm">{s.name}</p>
-                  <p className="text-xs text-gray-400">{s.memberId}</p>
+                  <span
+                    className={`px-3 py-1 rounded-full text-xs font-medium capitalize ${statusStyle[s.status]}`}
+                  >
+                    {s.status}
+                  </span>
+                </div>
+
+                <div className="grid grid-cols-2 sm:grid-cols-5 gap-4 mb-4 text-sm">
+                  <div>
+                    <p className="text-xs text-gray-400">Course</p>
+                    <p className="text-gray-800">{s.batch?.name || "—"}</p>
+                  </div>
+                  <div>
+                    <p className="text-xs text-gray-400">Join Date</p>
+                    <p className="text-gray-800">
+                      {s.joinDate ? new Date(s.joinDate).toLocaleDateString() : "—"}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-xs text-gray-400">Paid</p>
+                    <p className="text-green-600 font-medium">₹{d.paid}</p>
+                  </div>
+                  <div>
+                    <p className="text-xs text-gray-400">Due</p>
+                    <p className="text-red-500 font-medium">₹{d.due}</p>
+                  </div>
+                  <div>
+                    <p className="text-xs text-gray-400">Total</p>
+                    <p className="text-gray-800 font-medium">₹{d.total}</p>
+                  </div>
+                </div>
+
+                <div className="flex gap-2 border-t border-gray-50 pt-4">
+                  <button
+                    onClick={() => navigate(`/students/${s._id}`)}
+                    className="flex items-center gap-1.5 text-xs font-medium bg-green-50 text-green-700 px-3 py-1.5 rounded-lg hover:bg-green-100"
+                  >
+                    <DollarSign size={13} />
+                    Add Pay
+                  </button>
+                  <button
+                    onClick={() => navigate(`/students/${s._id}/edit`)}
+                    className="flex items-center gap-1.5 text-xs font-medium bg-amber-50 text-amber-700 px-3 py-1.5 rounded-lg hover:bg-amber-100"
+                  >
+                    <Pencil size={13} />
+                    Edit
+                  </button>
                 </div>
               </div>
-
-              <div className="flex items-center gap-8">
-                {s.mobile && (
-                  <div className="hidden sm:flex items-center gap-1.5 text-sm text-gray-500">
-                    <Phone size={14} />
-                    {s.mobile}
-                  </div>
-                )}
-                <span
-                  className={`px-3 py-1 rounded-full text-xs font-medium capitalize ${statusStyle[s.status]}`}
-                >
-                  {s.status}
-                </span>
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       )}
     </div>
