@@ -65,13 +65,21 @@ function StudentDetail() {
           <ArrowLeft size={16} />
           Back to Students
         </button>
-        <button
-          onClick={handleDeleteStudent}
-          className="flex items-center gap-1.5 text-sm text-red-600 hover:text-red-700"
-        >
-          <Trash2 size={15} />
-          Delete Student
-        </button>
+        <div className="flex items-center gap-4">
+          <button
+            onClick={() => navigate(`/students/${id}/edit`)}
+            className="text-sm text-indigo-600 hover:text-indigo-700 font-medium"
+          >
+            Edit
+          </button>
+          <button
+            onClick={handleDeleteStudent}
+            className="flex items-center gap-1.5 text-sm text-red-600 hover:text-red-700"
+          >
+            <Trash2 size={15} />
+            Delete Student
+          </button>
+        </div>
       </div>
 
       <div className="bg-white rounded-2xl border border-gray-100 p-6 mb-6 flex items-center gap-5">

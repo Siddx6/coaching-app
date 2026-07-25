@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { createStudent, getStudents, deleteStudent, updateStudentStatus } = require("../controllers/studentController");
+const { createStudent, getStudents, deleteStudent, updateStudentStatus, updateStudent } = require("../controllers/studentController");
 const protect = require("../middleware/auth");
 const authorize = require("../middleware/role");
 const upload = require("../middleware/upload");
@@ -18,5 +18,6 @@ router.post(
 
 router.get("/", protect, authorize(["admin", "operator"]), getStudents);
 router.patch("/:id/status", protect, authorize(["admin", "operator"]), updateStudentStatus);
+router.patch("/:id", protect, authorize(["admin", "operator"]), updateStudent);
 
 module.exports = router;

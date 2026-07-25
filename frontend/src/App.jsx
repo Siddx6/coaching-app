@@ -8,6 +8,7 @@ import Students from "./pages/Students";
 import AddStudent from "./pages/AddStudent";
 import Batches from "./pages/Batches";
 import StudentDetail from "./pages/StudentDetail";
+import EditStudent from "./pages/EditStudent";
 import Enquiries from "./pages/Enquiries";
 import Attendance from "./pages/Attendance";
 import Expenses from "./pages/Expenses";
@@ -51,6 +52,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <StudentDetail />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/students/:id/edit"
+            element={
+              <ProtectedRoute>
+                <EditStudent />
               </ProtectedRoute>
             }
           />
