@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import api from "../services/api";
+// eslint-disable-next-line no-unused-vars
+import { CalendarCheck } from "lucide-react";
 
 function Attendance() {
   const [batches, setBatches] = useState([]);
@@ -37,17 +39,23 @@ function Attendance() {
     }
   };
 
-  return (
-    <div className="min-h-screen bg-gray-100 p-6">
-      <h1 className="text-2xl font-bold text-purple-700 mb-6">Attendance</h1>
+  const presentCount = Object.values(records).filter((s) => s === "present").length;
+  const absentCount = Object.values(records).filter((s) => s === "absent").length;
 
-      <div className="bg-white p-4 rounded shadow mb-6 flex gap-4 max-w-lg">
-        <div className="flex-1">
-          <label className="block text-sm text-gray-600 mb-1">Batch</label>
+  return (
+    <div className="min-h-screen bg-gray-50 p-8">
+      <div className="mb-8">
+        <h1 className="text-2xl font-bold text-gray-900">Attendance</h1>
+        <p className="text-sm text-gray-400">Mark daily attendance by batch</p>
+      </div>
+
+      <div className="bg-white rounded-2xl border border-gray-100 p-6 mb-6 flex flex-wrap gap-4 items-end">
+        <div className="flex-1 min-w-[200px]">
+          <label className="block text-sm font-medium text-gray-500 mb-1.5">Batch</label>
           <select
             value={selectedBatch}
             onChange={(e) => setSelectedBatch(e.target.value)}
-            className="w-full border rounded px-3 py-2"
+            className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-indigo-500"
           >
             <option value="">Select a batch</option>
             {batches.map((b) => (
@@ -57,37 +65,57 @@ function Attendance() {
             ))}
           </select>
         </div>
-        <div className="flex-1">
-          <label className="block text-sm text-gray-600 mb-1">Date</label>
+        <div className="flex-1 min-w-[200px]">
+          <label className="block text-sm font-medium text-gray-500 mb-1.5">Date</label>
           <input
             type="date"
             value={date}
             onChange={(e) => setDate(e.target.value)}
-            className="w-full border rounded px-3 py-2"
+            className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-indigo-500"
           />
         </div>
+        {selectedBatch && (
+          <div className="flex gap-4 text-sm">
+            <span className="text-green-600 font-medium">{presentCount} Present</span>
+            <span className="text-red-500 font-medium">{absentCount} Absent</span>
+          </div>
+        )}
       </div>
 
       {!selectedBatch ? (
-        <p className="text-gray-500">Select a batch to mark attendance.</p>
+        <p className="text-gray-400">Select a batch to mark attendance.</p>
       ) : batchStudents.length === 0 ? (
-        <p className="text-gray-500">No students in this batch.</p>
+        <p className="text-gray-400">No students in this batch.</p>
       ) : (
-        <div className="grid gap-3 max-w-2xl">
-          {batchStudents.map((s) => (
-            <div key={s._id} className="bg-white p-4 rounded shadow flex justify-between items-center">
-              <div>
-                <p className="font-semibold">{s.name}</p>
-                <p className="text-sm text-gray-500">{s.memberId}</p>
+        <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden">
+          {batchStudents.map((s, i) => (
+            <div
+              key={s._id}
+              className={`flex items-center justify-between px-6 py-4 ${
+                i !== batchStudents.length - 1 ? "border-b border-gray-100" : ""
+              }`}
+            >
+              <div className="flex items-center gap-4">
+                {s.photoUrl ? (
+                  <img src={s.photoUrl} alt={s.name} className="w-10 h-10 rounded-full object-cover" />
+                ) : (
+                  <div className="w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-700 font-semibold text-sm">
+                    {s.name?.[0]}
+                  </div>
+                )}
+                <div>
+                  <p className="font-semibold text-gray-900 text-sm">{s.name}</p>
+                  <p className="text-xs text-gray-400">{s.memberId}</p>
+                </div>
               </div>
               <div className="flex gap-2">
                 <button
                   disabled={saving}
                   onClick={() => markStatus(s._id, "present")}
-                  className={`px-3 py-1.5 rounded text-sm font-medium ${
+                  className={`px-4 py-1.5 rounded-lg text-sm font-medium transition ${
                     records[s._id] === "present"
                       ? "bg-green-600 text-white"
-                      : "bg-gray-100 text-gray-600 hover:bg-green-100"
+                      : "bg-gray-50 text-gray-500 hover:bg-green-50"
                   }`}
                 >
                   Present
@@ -95,10 +123,10 @@ function Attendance() {
                 <button
                   disabled={saving}
                   onClick={() => markStatus(s._id, "absent")}
-                  className={`px-3 py-1.5 rounded text-sm font-medium ${
+                  className={`px-4 py-1.5 rounded-lg text-sm font-medium transition ${
                     records[s._id] === "absent"
-                      ? "bg-red-600 text-white"
-                      : "bg-gray-100 text-gray-600 hover:bg-red-100"
+                      ? "bg-red-500 text-white"
+                      : "bg-gray-50 text-gray-500 hover:bg-red-50"
                   }`}
                 >
                   Absent
