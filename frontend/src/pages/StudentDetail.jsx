@@ -46,6 +46,11 @@ function StudentDetail() {
     navigate("/students");
   };
 
+  const handleStatusChange = async (newStatus) => {
+    await api.patch(`/students/${id}/status`, { status: newStatus });
+    loadData();
+  };
+
   if (!student) return <div className="p-8">Loading...</div>;
 
   const latestDue = payments[0]?.dueAmount ?? 0;
@@ -97,11 +102,22 @@ function StudentDetail() {
             )}
           </div>
         </div>
-        <div className="text-right">
-          <p className="text-xs text-gray-400">Current Due</p>
-          <p className={`text-2xl font-bold ${latestDue > 0 ? "text-red-600" : "text-green-600"}`}>
-            ₹{latestDue}
-          </p>
+        <div className="text-right space-y-2">
+          <div>
+            <p className="text-xs text-gray-400">Current Due</p>
+            <p className={`text-2xl font-bold ${latestDue > 0 ? "text-red-600" : "text-green-600"}`}>
+              ₹{latestDue}
+            </p>
+          </div>
+          <select
+            value={student.status}
+            onChange={(e) => handleStatusChange(e.target.value)}
+            className="border border-gray-200 rounded-lg px-2.5 py-1.5 text-xs outline-none capitalize"
+          >
+            <option value="live">Live</option>
+            <option value="demo">Demo</option>
+            <option value="expired">Expired</option>
+          </select>
         </div>
       </div>
 
