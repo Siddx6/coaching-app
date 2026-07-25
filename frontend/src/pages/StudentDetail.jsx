@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import api from "../services/api";
+import { ArrowLeft, Phone, Mail, Receipt } from "lucide-react";
 
 function StudentDetail() {
   const { id } = useParams();
@@ -22,7 +23,6 @@ function StudentDetail() {
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     loadData();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
   const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
@@ -39,80 +39,142 @@ function StudentDetail() {
     }
   };
 
-  if (!student) return <div className="p-6">Loading...</div>;
+  if (!student) return <div className="p-8">Loading...</div>;
 
   const latestDue = payments[0]?.dueAmount ?? 0;
 
   return (
-    <div className="min-h-screen bg-gray-100 p-6">
-      <button onClick={() => navigate("/students")} className="text-purple-700 text-sm mb-4">
-        &larr; Back to Students
+    <div className="min-h-screen bg-gray-50 p-8">
+      <button
+        onClick={() => navigate("/students")}
+        className="flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-700 mb-6"
+      >
+        <ArrowLeft size={16} />
+        Back to Students
       </button>
 
-      <h1 className="text-2xl font-bold text-purple-700 mb-2">{student.name}</h1>
-      <p className="text-gray-500 mb-6">
-        {student.memberId} &middot; {student.mobile} &middot; Current Due: ₹{latestDue}
-      </p>
+      <div className="bg-white rounded-2xl border border-gray-100 p-6 mb-6 flex items-center gap-5">
+        {student.photoUrl ? (
+          <img
+            src={student.photoUrl}
+            alt={student.name}
+            className="w-16 h-16 rounded-full object-cover"
+          />
+        ) : (
+          <div className="w-16 h-16 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-700 font-bold text-xl">
+            {student.name?.[0]}
+          </div>
+        )}
+        <div className="flex-1">
+          <h1 className="text-xl font-bold text-gray-900">{student.name}</h1>
+          <p className="text-sm text-gray-400">{student.memberId}</p>
+          <div className="flex items-center gap-4 mt-2 text-sm text-gray-500">
+            {student.mobile && (
+              <span className="flex items-center gap-1.5">
+                <Phone size={14} /> {student.mobile}
+              </span>
+            )}
+            {student.email && (
+              <span className="flex items-center gap-1.5">
+                <Mail size={14} /> {student.email}
+              </span>
+            )}
+          </div>
+        </div>
+        <div className="text-right">
+          <p className="text-xs text-gray-400">Current Due</p>
+          <p className={`text-2xl font-bold ${latestDue > 0 ? "text-red-600" : "text-green-600"}`}>
+            ₹{latestDue}
+          </p>
+        </div>
+      </div>
 
       <div className="grid md:grid-cols-2 gap-6">
-        <form onSubmit={handleSubmit} className="bg-white p-4 rounded shadow space-y-3 h-fit">
-          <h2 className="font-semibold text-gray-700">Add Payment</h2>
-          {error && <p className="text-red-600 text-sm">{error}</p>}
-          <input
-            name="totalFee"
-            value={form.totalFee}
-            onChange={handleChange}
-            placeholder="Total Fee"
-            type="number"
-            className="w-full border rounded px-3 py-2"
-            required
-          />
-          <input
-            name="paidAmount"
-            value={form.paidAmount}
-            onChange={handleChange}
-            placeholder="Paid Amount"
-            type="number"
-            className="w-full border rounded px-3 py-2"
-            required
-          />
-          <select
-            name="mode"
-            value={form.mode}
-            onChange={handleChange}
-            className="w-full border rounded px-3 py-2"
+        <form
+          onSubmit={handleSubmit}
+          className="bg-white rounded-2xl border border-gray-100 p-6 space-y-4 h-fit"
+        >
+          <h2 className="font-semibold text-gray-900">Add Payment</h2>
+          {error && <p className="text-red-600 text-sm bg-red-50 rounded-lg py-2 px-3">{error}</p>}
+
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-500 mb-1.5">Total Fee</label>
+              <input
+                name="totalFee"
+                value={form.totalFee}
+                onChange={handleChange}
+                type="number"
+                className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-indigo-500"
+                required
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-500 mb-1.5">Paid Amount</label>
+              <input
+                name="paidAmount"
+                value={form.paidAmount}
+                onChange={handleChange}
+                type="number"
+                className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-indigo-500"
+                required
+              />
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-500 mb-1.5">Mode</label>
+            <select
+              name="mode"
+              value={form.mode}
+              onChange={handleChange}
+              className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-indigo-500"
+            >
+              <option value="cash">Cash</option>
+              <option value="upi">UPI</option>
+              <option value="card">Card</option>
+              <option value="bank_transfer">Bank Transfer</option>
+            </select>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-500 mb-1.5">Receipt No.</label>
+            <input
+              name="receiptNo"
+              value={form.receiptNo}
+              onChange={handleChange}
+              className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-indigo-500"
+            />
+          </div>
+
+          <button
+            type="submit"
+            className="w-full bg-indigo-600 text-white font-semibold py-2.5 rounded-lg hover:bg-indigo-700"
           >
-            <option value="cash">Cash</option>
-            <option value="upi">UPI</option>
-            <option value="card">Card</option>
-            <option value="bank_transfer">Bank Transfer</option>
-          </select>
-          <input
-            name="receiptNo"
-            value={form.receiptNo}
-            onChange={handleChange}
-            placeholder="Receipt No."
-            className="w-full border rounded px-3 py-2"
-          />
-          <button type="submit" className="bg-purple-700 text-white px-4 py-2 rounded hover:bg-purple-800">
             Add Payment
           </button>
         </form>
 
-        <div className="bg-white p-4 rounded shadow">
-          <h2 className="font-semibold text-gray-700 mb-3">Payment History</h2>
+        <div className="bg-white rounded-2xl border border-gray-100 p-6">
+          <h2 className="font-semibold text-gray-900 mb-4">Payment History</h2>
           {payments.length === 0 ? (
-            <p className="text-gray-500 text-sm">No payments yet.</p>
+            <p className="text-gray-400 text-sm">No payments yet.</p>
           ) : (
-            <div className="space-y-2">
+            <div className="space-y-3">
               {payments.map((p) => (
-                <div key={p._id} className="border-b pb-2">
-                  <p className="text-sm">
-                    Paid ₹{p.paidAmount} of ₹{p.totalFee} &middot; Due ₹{p.dueAmount}
-                  </p>
-                  <p className="text-xs text-gray-400">
-                    {new Date(p.date).toLocaleDateString()} &middot; {p.mode} &middot; {p.receiptNo}
-                  </p>
+                <div key={p._id} className="flex items-start gap-3 pb-3 border-b border-gray-50 last:border-0">
+                  <div className="w-9 h-9 rounded-lg bg-green-50 flex items-center justify-center flex-shrink-0">
+                    <Receipt size={16} className="text-green-600" />
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-sm font-medium text-gray-900">
+                      Paid ₹{p.paidAmount} of ₹{p.totalFee}
+                    </p>
+                    <p className="text-xs text-gray-400">
+                      {new Date(p.date).toLocaleDateString()} &middot; {p.mode} &middot; {p.receiptNo}
+                    </p>
+                  </div>
+                  <span className="text-xs font-medium text-red-500">Due ₹{p.dueAmount}</span>
                 </div>
               ))}
             </div>
