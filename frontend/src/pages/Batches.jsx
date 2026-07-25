@@ -9,6 +9,7 @@ function Batches() {
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [form, setForm] = useState({ subCourse: "", name: "", monthlyFee: "", oneTimeFee: "" });
+  const [subCourses, setSubCourses] = useState([]);
   const [error, setError] = useState("");
 
   const loadBatches = () => {
@@ -22,6 +23,7 @@ function Batches() {
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     loadBatches();
+    api.get("/subcourses").then((res) => setSubCourses(res.data));
   }, []);
 
   const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
@@ -64,14 +66,21 @@ function Batches() {
         >
           {error && <p className="text-red-600 text-sm bg-red-50 rounded-lg py-2 px-3">{error}</p>}
           <div>
-            <label className="block text-sm font-medium text-gray-500 mb-1.5">SubCourse ID</label>
-            <input
+            <label className="block text-sm font-medium text-gray-500 mb-1.5">Sub-Course</label>
+            <select
               name="subCourse"
               value={form.subCourse}
               onChange={handleChange}
               className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-indigo-500"
               required
-            />
+            >
+              <option value="">Select a sub-course</option>
+              {subCourses.map((sc) => (
+                <option key={sc._id} value={sc._id}>
+                  {sc.course?.name} — {sc.name}
+                </option>
+              ))}
+            </select>
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-500 mb-1.5">Batch Name</label>
