@@ -144,10 +144,12 @@ function Batches() {
                 </span>
               </div>
               <p className="font-semibold text-gray-900">{b.name}</p>
+              <p className="text-xs text-indigo-600 mt-0.5">
+                {b.subCourse?.course?.name} &rsaquo; {b.subCourse?.name}
+              </p>
               <p className="text-sm text-gray-400 mt-1">
                 ₹{b.monthlyFee}/mo &middot; ₹{b.oneTimeFee} one-time
               </p>
-              <p className="text-xs text-gray-300 mt-3 truncate">{b._id}</p>
             </div>
           ))}
         </div>
