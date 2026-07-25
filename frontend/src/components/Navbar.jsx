@@ -2,6 +2,7 @@ import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import {
   LayoutDashboard,
+  BookOpen,
   Users,
   UserPlus,
   Layers,
@@ -21,6 +22,7 @@ function Navbar() {
 
   const links = [
     { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
+    { to: "/master", label: "Master Setup", icon: BookOpen },
     { to: "/students", label: "Students", icon: Users },
     { to: "/students/add", label: "Add Student", icon: UserPlus },
     { to: "/batches", label: "Batches", icon: Layers },

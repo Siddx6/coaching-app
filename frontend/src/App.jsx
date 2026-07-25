@@ -14,6 +14,7 @@ import Attendance from "./pages/Attendance";
 import Expenses from "./pages/Expenses";
 import AdminUsers from "./pages/AdminUsers";
 import Reports from "./pages/Reports";
+import MasterSetup from "./pages/MasterSetup";
 
 function App() {
   return (
@@ -60,6 +61,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <EditStudent />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/master"
+            element={
+              <ProtectedRoute>
+                <MasterSetup />
               </ProtectedRoute>
             }
           />
