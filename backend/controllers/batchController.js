@@ -19,4 +19,28 @@ const getBatches = async (req, res) => {
   }
 };
 
-module.exports = { createBatch, getBatches };
+const updateBatch = async (req, res) => {
+  try {
+    const batch = await Batch.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    if (!batch) {
+      return res.status(404).json({ message: "Batch not found" });
+    }
+    res.json(batch);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+const deleteBatch = async (req, res) => {
+  try {
+    const batch = await Batch.findByIdAndDelete(req.params.id);
+    if (!batch) {
+      return res.status(404).json({ message: "Batch not found" });
+    }
+    res.json({ message: "Batch deleted" });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+module.exports = { createBatch, getBatches, updateBatch, deleteBatch };

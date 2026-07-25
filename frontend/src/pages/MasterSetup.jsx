@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import api from "../services/api";
-import { Plus, BookOpen } from "lucide-react";
+import { Plus, BookOpen, Pencil, Trash2, X } from "lucide-react";
 
 function MasterSetup() {
   const [courses, setCourses] = useState([]);
@@ -11,6 +11,10 @@ function MasterSetup() {
   const [courseName, setCourseName] = useState("");
   const [subForm, setSubForm] = useState({ course: "", name: "" });
   const [error, setError] = useState("");
+  const [editingCourse, setEditingCourse] = useState(null);
+  const [editingSub, setEditingSub] = useState(null);
+  const [editCourseName, setEditCourseName] = useState("");
+  const [editSubForm, setEditSubForm] = useState({ course: "", name: "" });
 
   const loadAll = () => {
     setLoading(true);
@@ -51,6 +55,40 @@ function MasterSetup() {
     } catch (err) {
       setError(err.response?.data?.message || "Failed to add sub-course");
     }
+  };
+
+  const startEditCourse = (c) => {
+    setEditingCourse(c._id);
+    setEditCourseName(c.name);
+  };
+
+  const saveEditCourse = async (id) => {
+    await api.patch(`/courses/${id}`, { name: editCourseName });
+    setEditingCourse(null);
+    loadAll();
+  };
+
+  const deleteCourse = async (id) => {
+    if (!window.confirm("Delete this course? All sub-courses and batches under it will also be deleted.")) return;
+    await api.delete(`/courses/${id}`);
+    loadAll();
+  };
+
+  const startEditSub = (sc) => {
+    setEditingSub(sc._id);
+    setEditSubForm({ course: sc.course?._id || "", name: sc.name });
+  };
+
+  const saveEditSub = async (id) => {
+    await api.patch(`/subcourses/${id}`, editSubForm);
+    setEditingSub(null);
+    loadAll();
+  };
+
+  const deleteSub = async (id) => {
+    if (!window.confirm("Delete this sub-course? Batches under it will remain but be unlinked.")) return;
+    await api.delete(`/subcourses/${id}`);
+    loadAll();
   };
 
   return (
@@ -112,10 +150,43 @@ function MasterSetup() {
                     i !== courses.length - 1 ? "border-b border-gray-100" : ""
                   }`}
                 >
-                  <div className="w-8 h-8 rounded-lg bg-indigo-50 flex items-center justify-center">
+                  <div className="w-8 h-8 rounded-lg bg-indigo-50 flex items-center justify-center flex-shrink-0">
                     <BookOpen size={15} className="text-indigo-600" />
                   </div>
-                  <p className="text-sm font-medium text-gray-900">{c.name}</p>
+                  {editingCourse === c._id ? (
+                    <>
+                      <input
+                        value={editCourseName}
+                        onChange={(e) => setEditCourseName(e.target.value)}
+                        className="flex-1 border border-gray-200 rounded-lg px-2.5 py-1.5 text-sm outline-none focus:ring-2 focus:ring-indigo-500"
+                      />
+                      <button
+                        onClick={() => saveEditCourse(c._id)}
+                        className="text-xs font-medium text-indigo-600 hover:text-indigo-700"
+                      >
+                        Save
+                      </button>
+                      <button onClick={() => setEditingCourse(null)} className="text-gray-400 hover:text-gray-600">
+                        <X size={15} />
+                      </button>
+                    </>
+                  ) : (
+                    <>
+                      <p className="text-sm font-medium text-gray-900 flex-1">{c.name}</p>
+                      <button
+                        onClick={() => startEditCourse(c)}
+                        className="text-gray-300 hover:text-indigo-600"
+                      >
+                        <Pencil size={14} />
+                      </button>
+                      <button
+                        onClick={() => deleteCourse(c._id)}
+                        className="text-gray-300 hover:text-red-600"
+                      >
+                        <Trash2 size={14} />
+                      </button>
+                    </>
+                  )}
                 </div>
               ))}
             </div>
@@ -184,13 +255,59 @@ function MasterSetup() {
                     i !== subCourses.length - 1 ? "border-b border-gray-100" : ""
                   }`}
                 >
-                  <div className="w-8 h-8 rounded-lg bg-amber-50 flex items-center justify-center">
+                  <div className="w-8 h-8 rounded-lg bg-amber-50 flex items-center justify-center flex-shrink-0">
                     <BookOpen size={15} className="text-amber-600" />
                   </div>
-                  <div>
-                    <p className="text-sm font-medium text-gray-900">{sc.name}</p>
-                    <p className="text-xs text-gray-400">{sc.course?.name}</p>
-                  </div>
+                  {editingSub === sc._id ? (
+                    <>
+                      <div className="flex-1 space-y-2">
+                        <select
+                          value={editSubForm.course}
+                          onChange={(e) => setEditSubForm({ ...editSubForm, course: e.target.value })}
+                          className="w-full border border-gray-200 rounded-lg px-2.5 py-1.5 text-sm outline-none focus:ring-2 focus:ring-indigo-500"
+                        >
+                          {courses.map((c) => (
+                            <option key={c._id} value={c._id}>
+                              {c.name}
+                            </option>
+                          ))}
+                        </select>
+                        <input
+                          value={editSubForm.name}
+                          onChange={(e) => setEditSubForm({ ...editSubForm, name: e.target.value })}
+                          className="w-full border border-gray-200 rounded-lg px-2.5 py-1.5 text-sm outline-none focus:ring-2 focus:ring-indigo-500"
+                        />
+                      </div>
+                      <button
+                        onClick={() => saveEditSub(sc._id)}
+                        className="text-xs font-medium text-indigo-600 hover:text-indigo-700"
+                      >
+                        Save
+                      </button>
+                      <button onClick={() => setEditingSub(null)} className="text-gray-400 hover:text-gray-600">
+                        <X size={15} />
+                      </button>
+                    </>
+                  ) : (
+                    <>
+                      <div className="flex-1">
+                        <p className="text-sm font-medium text-gray-900">{sc.name}</p>
+                        <p className="text-xs text-gray-400">{sc.course?.name}</p>
+                      </div>
+                      <button
+                        onClick={() => startEditSub(sc)}
+                        className="text-gray-300 hover:text-indigo-600"
+                      >
+                        <Pencil size={14} />
+                      </button>
+                      <button
+                        onClick={() => deleteSub(sc._id)}
+                        className="text-gray-300 hover:text-red-600"
+                      >
+                        <Trash2 size={14} />
+                      </button>
+                    </>
+                  )}
                 </div>
               ))}
             </div>

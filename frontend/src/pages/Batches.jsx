@@ -1,16 +1,18 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import api from "../services/api";
-import { Plus, Layers } from "lucide-react";
+import { Plus, Layers, Pencil, Trash2, X } from "lucide-react";
 
 function Batches() {
   const { user } = useAuth();
   const [batches, setBatches] = useState([]);
+  const [subCourses, setSubCourses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [form, setForm] = useState({ subCourse: "", name: "", monthlyFee: "", oneTimeFee: "" });
-  const [subCourses, setSubCourses] = useState([]);
   const [error, setError] = useState("");
+  const [editingBatch, setEditingBatch] = useState(null);
+  const [editForm, setEditForm] = useState({ subCourse: "", name: "", monthlyFee: "", oneTimeFee: "", status: "live" });
 
   const loadBatches = () => {
     setLoading(true);
@@ -39,6 +41,29 @@ function Batches() {
     } catch (err) {
       setError(err.response?.data?.message || "Failed to add batch");
     }
+  };
+
+  const startEdit = (b) => {
+    setEditingBatch(b._id);
+    setEditForm({
+      subCourse: b.subCourse?._id || "",
+      name: b.name,
+      monthlyFee: b.monthlyFee,
+      oneTimeFee: b.oneTimeFee,
+      status: b.status,
+    });
+  };
+
+  const saveEdit = async (id) => {
+    await api.patch(`/batches/${id}`, editForm);
+    setEditingBatch(null);
+    loadBatches();
+  };
+
+  const deleteBatch = async (id) => {
+    if (!window.confirm("Delete this batch?")) return;
+    await api.delete(`/batches/${id}`);
+    loadBatches();
   };
 
   return (
@@ -129,29 +154,100 @@ function Batches() {
         <p className="text-gray-400">No batches found.</p>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {batches.map((b) => (
-            <div key={b._id} className="bg-white rounded-2xl border border-gray-100 p-5">
-              <div className="flex items-center justify-between mb-4">
-                <div className="w-9 h-9 rounded-lg bg-gray-50 flex items-center justify-center">
-                  <Layers size={18} className="text-gray-700" />
-                </div>
-                <span
-                  className={`px-2.5 py-1 rounded-full text-xs font-medium capitalize ${
-                    b.status === "live" ? "bg-green-50 text-green-700" : "bg-gray-100 text-gray-500"
-                  }`}
+          {batches.map((b) =>
+            editingBatch === b._id ? (
+              <div key={b._id} className="bg-white rounded-2xl border border-gray-100 p-5 space-y-3">
+                <select
+                  value={editForm.subCourse}
+                  onChange={(e) => setEditForm({ ...editForm, subCourse: e.target.value })}
+                  className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-indigo-500"
                 >
-                  {b.status}
-                </span>
+                  {subCourses.map((sc) => (
+                    <option key={sc._id} value={sc._id}>
+                      {sc.course?.name} — {sc.name}
+                    </option>
+                  ))}
+                </select>
+                <input
+                  value={editForm.name}
+                  onChange={(e) => setEditForm({ ...editForm, name: e.target.value })}
+                  className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-indigo-500"
+                />
+                <div className="grid grid-cols-2 gap-2">
+                  <input
+                    type="number"
+                    value={editForm.monthlyFee}
+                    onChange={(e) => setEditForm({ ...editForm, monthlyFee: e.target.value })}
+                    className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-indigo-500"
+                    placeholder="Monthly Fee"
+                  />
+                  <input
+                    type="number"
+                    value={editForm.oneTimeFee}
+                    onChange={(e) => setEditForm({ ...editForm, oneTimeFee: e.target.value })}
+                    className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-indigo-500"
+                    placeholder="One-Time Fee"
+                  />
+                </div>
+                <select
+                  value={editForm.status}
+                  onChange={(e) => setEditForm({ ...editForm, status: e.target.value })}
+                  className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-indigo-500"
+                >
+                  <option value="live">Live</option>
+                  <option value="ended">Ended</option>
+                </select>
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => saveEdit(b._id)}
+                    className="flex-1 bg-indigo-600 text-white text-sm font-medium py-2 rounded-lg hover:bg-indigo-700"
+                  >
+                    Save
+                  </button>
+                  <button
+                    onClick={() => setEditingBatch(null)}
+                    className="border border-gray-200 text-gray-600 px-3 rounded-lg hover:bg-gray-50"
+                  >
+                    <X size={16} />
+                  </button>
+                </div>
               </div>
-              <p className="font-semibold text-gray-900">{b.name}</p>
-              <p className="text-xs text-indigo-600 mt-0.5">
-                {b.subCourse?.course?.name} &rsaquo; {b.subCourse?.name}
-              </p>
-              <p className="text-sm text-gray-400 mt-1">
-                ₹{b.monthlyFee}/mo &middot; ₹{b.oneTimeFee} one-time
-              </p>
-            </div>
-          ))}
+            ) : (
+              <div key={b._id} className="bg-white rounded-2xl border border-gray-100 p-5">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="w-9 h-9 rounded-lg bg-gray-50 flex items-center justify-center">
+                    <Layers size={18} className="text-gray-700" />
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span
+                      className={`px-2.5 py-1 rounded-full text-xs font-medium capitalize ${
+                        b.status === "live" ? "bg-green-50 text-green-700" : "bg-gray-100 text-gray-500"
+                      }`}
+                    >
+                      {b.status}
+                    </span>
+                    {user?.role === "admin" && (
+                      <>
+                        <button onClick={() => startEdit(b)} className="text-gray-300 hover:text-indigo-600">
+                          <Pencil size={14} />
+                        </button>
+                        <button onClick={() => deleteBatch(b._id)} className="text-gray-300 hover:text-red-600">
+                          <Trash2 size={14} />
+                        </button>
+                      </>
+                    )}
+                  </div>
+                </div>
+                <p className="font-semibold text-gray-900">{b.name}</p>
+                <p className="text-xs text-indigo-600 mt-0.5">
+                  {b.subCourse?.course?.name} &rsaquo; {b.subCourse?.name}
+                </p>
+                <p className="text-sm text-gray-400 mt-1">
+                  ₹{b.monthlyFee}/mo &middot; ₹{b.oneTimeFee} one-time
+                </p>
+              </div>
+            )
+          )}
         </div>
       )}
     </div>

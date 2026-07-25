@@ -1,7 +1,5 @@
 import { useEffect, useState } from "react";
 import api from "../services/api";
-// eslint-disable-next-line no-unused-vars
-import { CalendarCheck } from "lucide-react";
 
 function Attendance() {
   const [batches, setBatches] = useState([]);
@@ -9,7 +7,9 @@ function Attendance() {
   const [selectedBatch, setSelectedBatch] = useState("");
   const [date, setDate] = useState(() => new Date().toISOString().split("T")[0]);
   const [records, setRecords] = useState({});
+  const [pending, setPending] = useState({});
   const [saving, setSaving] = useState(false);
+  const [saved, setSaved] = useState(false);
 
   useEffect(() => {
     api.get("/batches").then((res) => setBatches(res.data));
@@ -24,23 +24,41 @@ function Attendance() {
         map[r.student._id] = r.status;
       });
       setRecords(map);
+      setPending({});
+      setSaved(false);
     });
   }, [selectedBatch, date]);
 
   const batchStudents = students.filter((s) => s.batch?._id === selectedBatch);
 
-  const markStatus = async (studentId, status) => {
+  const markStatus = (studentId, status) => {
+    setPending({ ...pending, [studentId]: status });
+    setSaved(false);
+  };
+
+  const displayStatus = (studentId) => pending[studentId] ?? records[studentId];
+
+  const handleSaveAll = async () => {
     setSaving(true);
     try {
-      await api.post("/attendance", { student: studentId, batch: selectedBatch, date, status });
-      setRecords({ ...records, [studentId]: status });
+      const entries = Object.entries(pending);
+      await Promise.all(
+        entries.map(([studentId, status]) =>
+          api.post("/attendance", { student: studentId, batch: selectedBatch, date, status })
+        )
+      );
+      setRecords({ ...records, ...pending });
+      setPending({});
+      setSaved(true);
     } finally {
       setSaving(false);
     }
   };
 
-  const presentCount = Object.values(records).filter((s) => s === "present").length;
-  const absentCount = Object.values(records).filter((s) => s === "absent").length;
+  const combined = { ...records, ...pending };
+  const presentCount = Object.values(combined).filter((s) => s === "present").length;
+  const absentCount = Object.values(combined).filter((s) => s === "absent").length;
+  const hasPending = Object.keys(pending).length > 0;
 
   return (
     <div className="min-h-screen bg-gray-50 p-8">
@@ -80,6 +98,18 @@ function Attendance() {
             <span className="text-red-500 font-medium">{absentCount} Absent</span>
           </div>
         )}
+        {hasPending && (
+          <button
+            onClick={handleSaveAll}
+            disabled={saving}
+            className="bg-indigo-600 text-white text-sm font-semibold px-6 py-2.5 rounded-lg hover:bg-indigo-700 disabled:opacity-50"
+          >
+            {saving ? "Saving..." : "Save Attendance"}
+          </button>
+        )}
+        {saved && !hasPending && (
+          <span className="text-sm text-green-600 font-medium">Saved ✓</span>
+        )}
       </div>
 
       {!selectedBatch ? (
@@ -108,12 +138,14 @@ function Attendance() {
                   <p className="text-xs text-gray-400">{s.memberId}</p>
                 </div>
               </div>
-              <div className="flex gap-2">
+              <div className="flex items-center gap-2">
+                {pending[s._id] && (
+                  <span className="text-xs text-amber-600 font-medium">Unsaved</span>
+                )}
                 <button
-                  disabled={saving}
                   onClick={() => markStatus(s._id, "present")}
                   className={`px-4 py-1.5 rounded-lg text-sm font-medium transition ${
-                    records[s._id] === "present"
+                    displayStatus(s._id) === "present"
                       ? "bg-green-600 text-white"
                       : "bg-gray-50 text-gray-500 hover:bg-green-50"
                   }`}
@@ -121,10 +153,9 @@ function Attendance() {
                   Present
                 </button>
                 <button
-                  disabled={saving}
                   onClick={() => markStatus(s._id, "absent")}
                   className={`px-4 py-1.5 rounded-lg text-sm font-medium transition ${
-                    records[s._id] === "absent"
+                    displayStatus(s._id) === "absent"
                       ? "bg-red-500 text-white"
                       : "bg-gray-50 text-gray-500 hover:bg-red-50"
                   }`}
