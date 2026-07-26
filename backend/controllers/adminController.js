@@ -28,6 +28,22 @@ const addUser = async (req, res) => {
   }
 };
 
+const updateUserPermissions = async (req, res) => {
+  try {
+    const user = await User.findByIdAndUpdate(
+      req.params.id,
+      { permissions: req.body.permissions },
+      { new: true }
+    ).select("-password");
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    res.json(user);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
 const deleteUser = async (req, res) => {
   try {
     const user = await User.findByIdAndDelete(req.params.id);
@@ -40,4 +56,4 @@ const deleteUser = async (req, res) => {
   }
 };
 
-module.exports = { getUsers, addUser, deleteUser };
+module.exports = { getUsers, addUser, deleteUser, updateUserPermissions };

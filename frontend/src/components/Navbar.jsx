@@ -11,6 +11,7 @@ import {
   Wallet,
   ShieldCheck,
   BarChart3,
+  KeyRound,
   LogOut,
   ChevronLeft,
   ChevronRight,
@@ -22,18 +23,26 @@ function Navbar({ collapsed, setCollapsed }) {
 
   if (!user) return null;
 
-  const links = [
-    { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
-    { to: "/master", label: "Master Setup", icon: BookOpen },
-    { to: "/students", label: "Students", icon: Users },
-    { to: "/students/add", label: "Add Student", icon: UserPlus },
-    { to: "/batches", label: "Batches", icon: Layers },
-    { to: "/enquiries", label: "Enquiries", icon: ClipboardList },
-    { to: "/attendance", label: "Attendance", icon: CalendarCheck },
-    { to: "/expenses", label: "Expenses", icon: Wallet },
-    { to: "/admin/users", label: "Users", icon: ShieldCheck },
-    { to: "/reports", label: "Reports", icon: BarChart3 },
+  const allLinks = [
+    { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard, key: null },
+    { to: "/master", label: "Master Setup", icon: BookOpen, key: "masterSetup" },
+    { to: "/students", label: "Students", icon: Users, key: "students" },
+    { to: "/students/add", label: "Add Student", icon: UserPlus, key: "students" },
+    { to: "/batches", label: "Batches", icon: Layers, key: "batches" },
+    { to: "/enquiries", label: "Enquiries", icon: ClipboardList, key: "enquiries" },
+    { to: "/attendance", label: "Attendance", icon: CalendarCheck, key: "attendance" },
+    { to: "/expenses", label: "Expenses", icon: Wallet, key: "expenses" },
+    { to: "/admin/users", label: "Users", icon: ShieldCheck, key: "adminOnly" },
+    { to: "/admin/permissions", label: "Manage Users", icon: KeyRound, key: "adminOnly" },
+    { to: "/reports", label: "Reports", icon: BarChart3, key: "reports" },
   ];
+
+  const links = allLinks.filter((link) => {
+    if (user.role === "admin") return true;
+    if (link.key === null) return true;
+    if (link.key === "adminOnly") return false;
+    return !!user.permissions?.[link.key];
+  });
 
   return (
     <div

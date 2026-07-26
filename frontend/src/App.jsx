@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Navbar from "./components/Navbar";
@@ -16,21 +16,22 @@ import Expenses from "./pages/Expenses";
 import AdminUsers from "./pages/AdminUsers";
 import Reports from "./pages/Reports";
 import MasterSetup from "./pages/MasterSetup";
+import ManagePermissions from "./pages/ManagePermissions";
 
-function App() {
-  const [collapsed, setCollapsed] = useState(false);
+function AppLayout({ collapsed, setCollapsed }) {
+  const location = useLocation();
+  const isLoginPage = location.pathname === "/login";
 
   return (
-    <AuthProvider>
-      <BrowserRouter>
-        <Navbar collapsed={collapsed} setCollapsed={setCollapsed} />
-        <div className={`transition-all duration-300 ease-in-out ${collapsed ? "ml-20" : "ml-60"}`}>
+    <>
+      {!isLoginPage && <Navbar collapsed={collapsed} setCollapsed={setCollapsed} />}
+      <div className={isLoginPage ? "" : `transition-all duration-300 ease-in-out ${collapsed ? "ml-20" : "ml-60"}`}>
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route
             path="/dashboard"
             element={
-              <ProtectedRoute>
+              <ProtectedRoute path="/dashboard">
                 <Dashboard />
               </ProtectedRoute>
             }
@@ -38,7 +39,7 @@ function App() {
           <Route
             path="/students"
             element={
-              <ProtectedRoute>
+              <ProtectedRoute path="/students">
                 <Students />
               </ProtectedRoute>
             }
@@ -46,7 +47,7 @@ function App() {
           <Route
             path="/students/add"
             element={
-              <ProtectedRoute>
+              <ProtectedRoute path="/students/add">
                 <AddStudent />
               </ProtectedRoute>
             }
@@ -54,7 +55,7 @@ function App() {
           <Route
             path="/students/:id"
             element={
-              <ProtectedRoute>
+              <ProtectedRoute path="/students/:id">
                 <StudentDetail />
               </ProtectedRoute>
             }
@@ -62,7 +63,7 @@ function App() {
           <Route
             path="/students/:id/edit"
             element={
-              <ProtectedRoute>
+              <ProtectedRoute path="/students/:id/edit">
                 <EditStudent />
               </ProtectedRoute>
             }
@@ -70,7 +71,7 @@ function App() {
           <Route
             path="/master"
             element={
-              <ProtectedRoute>
+              <ProtectedRoute path="/master">
                 <MasterSetup />
               </ProtectedRoute>
             }
@@ -78,7 +79,7 @@ function App() {
           <Route
             path="/batches"
             element={
-              <ProtectedRoute>
+              <ProtectedRoute path="/batches">
                 <Batches />
               </ProtectedRoute>
             }
@@ -86,7 +87,7 @@ function App() {
           <Route
             path="/enquiries"
             element={
-              <ProtectedRoute>
+              <ProtectedRoute path="/enquiries">
                 <Enquiries />
               </ProtectedRoute>
             }
@@ -94,7 +95,7 @@ function App() {
           <Route
             path="/attendance"
             element={
-              <ProtectedRoute>
+              <ProtectedRoute path="/attendance">
                 <Attendance />
               </ProtectedRoute>
             }
@@ -102,7 +103,7 @@ function App() {
           <Route
             path="/expenses"
             element={
-              <ProtectedRoute>
+              <ProtectedRoute path="/expenses">
                 <Expenses />
               </ProtectedRoute>
             }
@@ -110,22 +111,41 @@ function App() {
           <Route
             path="/admin/users"
             element={
-              <ProtectedRoute>
+              <ProtectedRoute path="/admin/users">
                 <AdminUsers />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/permissions"
+            element={
+              <ProtectedRoute path="/admin/permissions">
+                <ManagePermissions />
               </ProtectedRoute>
             }
           />
           <Route
             path="/reports"
             element={
-              <ProtectedRoute>
+              <ProtectedRoute path="/reports">
                 <Reports />
               </ProtectedRoute>
             }
           />
           <Route path="*" element={<Navigate to="/login" replace />} />
         </Routes>
-        </div>
+      </div>
+    </>
+  );
+}
+
+function App() {
+  const [collapsed, setCollapsed] = useState(false);
+
+  return (
+    <AuthProvider>
+      <BrowserRouter>
+        <AppLayout collapsed={collapsed} setCollapsed={setCollapsed} />
       </BrowserRouter>
     </AuthProvider>
   );
