@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -17,11 +18,13 @@ import Reports from "./pages/Reports";
 import MasterSetup from "./pages/MasterSetup";
 
 function App() {
+  const [collapsed, setCollapsed] = useState(false);
+
   return (
     <AuthProvider>
       <BrowserRouter>
-        <Navbar />
-        <div className="ml-60">
+        <Navbar collapsed={collapsed} setCollapsed={setCollapsed} />
+        <div className={`transition-all duration-300 ease-in-out ${collapsed ? "ml-20" : "ml-60"}`}>
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route
