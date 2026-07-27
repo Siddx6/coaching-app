@@ -18,6 +18,7 @@ function AddStudent() {
   });
   const [photo, setPhoto] = useState(null);
   const [photoPreview, setPhotoPreview] = useState(null);
+  const [documents, setDocuments] = useState([]);
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [batches, setBatches] = useState([]);
@@ -27,7 +28,12 @@ function AddStudent() {
   }, []);
 
   const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+    const { name, value, type, checked } = e.target;
+    setForm({ ...form, [name]: type === "checkbox" ? checked : value });
+  };
+
+  const handleDocumentsChange = (e) => {
+    setDocuments(Array.from(e.target.files));
   };
 
   const handlePhotoChange = (e) => {
@@ -45,6 +51,7 @@ function AddStudent() {
       const formData = new FormData();
       Object.entries(form).forEach(([key, value]) => formData.append(key, value));
       if (photo) formData.append("photo", photo);
+      documents.forEach((doc) => formData.append("documents", doc));
 
       await api.post("/students", formData, {
         headers: { "Content-Type": "multipart/form-data" },
@@ -202,6 +209,20 @@ function AddStudent() {
                 </option>
               ))}
             </select>
+          </div>
+
+          <div className="sm:col-span-2">
+            <label className="block text-sm font-medium text-gray-500 mb-1.5">Documents</label>
+            <input
+              type="file"
+              multiple
+              accept="image/*,.pdf"
+              onChange={handleDocumentsChange}
+              className="w-full text-sm"
+            />
+            {documents.length > 0 && (
+              <p className="text-xs text-gray-400 mt-1">{documents.length} file(s) selected</p>
+            )}
           </div>
         </div>
 
