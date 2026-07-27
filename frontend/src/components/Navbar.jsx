@@ -12,6 +12,7 @@ import {
   ShieldCheck,
   BarChart3,
   KeyRound,
+  Bell,
   LogOut,
   ChevronLeft,
   ChevronRight,
@@ -35,6 +36,7 @@ function Navbar({ collapsed, setCollapsed }) {
     { to: "/admin/users", label: "Users", icon: ShieldCheck, key: "adminOnly" },
     { to: "/admin/permissions", label: "Manage Users", icon: KeyRound, key: "adminOnly" },
     { to: "/reports", label: "Reports", icon: BarChart3, key: "reports" },
+    { to: "/notices", label: "Notices", icon: Bell, key: null },
   ];
 
   const links = allLinks.filter((link) => {

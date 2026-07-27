@@ -15,6 +15,7 @@ const expenseRoutes = require("./routes/expenseRoutes");
 const enquiryRoutes = require("./routes/enquiryRoutes");
 const reportRoutes = require("./routes/reportRoutes");
 const adminRoutes = require("./routes/adminRoutes");
+const noticeRoutes = require("./routes/noticeRoutes");
 
 const app = express();
 
@@ -34,6 +35,7 @@ app.use("/api/expenses", expenseRoutes);
 app.use("/api/enquiries", enquiryRoutes);
 app.use("/api/reports", reportRoutes);
 app.use("/api/admin", adminRoutes);
+app.use("/api/notices", noticeRoutes);
 
 
 app.get("/", (req, res) => {

@@ -17,6 +17,7 @@ import AdminUsers from "./pages/AdminUsers";
 import Reports from "./pages/Reports";
 import MasterSetup from "./pages/MasterSetup";
 import ManagePermissions from "./pages/ManagePermissions";
+import Notices from "./pages/Notices";
 
 function AppLayout({ collapsed, setCollapsed }) {
   const location = useLocation();
@@ -121,6 +122,14 @@ function AppLayout({ collapsed, setCollapsed }) {
             element={
               <ProtectedRoute path="/admin/permissions">
                 <ManagePermissions />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/notices"
+            element={
+              <ProtectedRoute path="/notices">
+                <Notices />
               </ProtectedRoute>
             }
           />
