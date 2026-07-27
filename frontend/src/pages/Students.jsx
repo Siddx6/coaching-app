@@ -1,4 +1,3 @@
-/* eslint-disable no-undef */
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../services/api";
@@ -220,6 +219,12 @@ function Students() {
                   >
                     <IdCard size={13} />
                     ID Card
+                  </button>
+                  <button
+                    onClick={() => navigate(`/students/${s._id}/profile`)}
+                    className="flex items-center gap-1.5 text-xs font-medium bg-gray-50 text-gray-600 px-3 py-1.5 rounded-lg hover:bg-gray-100"
+                  >
+                    Profile
                   </button>
                 </div>
               </div>

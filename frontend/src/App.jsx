@@ -19,7 +19,7 @@ import MasterSetup from "./pages/MasterSetup";
 import ManagePermissions from "./pages/ManagePermissions";
 import Notices from "./pages/Notices";
 import ProfileSettings from "./pages/ProfileSettings";
-
+import StudentProfile from "./pages/StudentProfile";
 
 function AppLayout({ collapsed, setCollapsed }) {
   const location = useLocation();
@@ -60,6 +60,14 @@ function AppLayout({ collapsed, setCollapsed }) {
             element={
               <ProtectedRoute path="/students/:id">
                 <StudentDetail />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/students/:id/profile"
+            element={
+              <ProtectedRoute path="/students/:id/profile">
+                <StudentProfile />
               </ProtectedRoute>
             }
           />
