@@ -13,6 +13,7 @@ import {
   BarChart3,
   KeyRound,
   Bell,
+  Settings,
   LogOut,
   ChevronLeft,
   ChevronRight,
@@ -114,6 +115,9 @@ function Navbar({ collapsed, setCollapsed }) {
                 <p className="text-sm font-medium text-gray-900 truncate">{user.name}</p>
                 <p className="text-xs text-gray-400 capitalize">{user.role}</p>
               </div>
+              <Link to="/profile" className="text-gray-400 hover:text-indigo-600" title="Profile Settings">
+                <Settings size={17} />
+              </Link>
               <button onClick={logout} className="text-gray-400 hover:text-red-600">
                 <LogOut size={17} />
               </button>
