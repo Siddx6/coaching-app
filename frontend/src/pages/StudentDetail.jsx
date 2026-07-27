@@ -1,7 +1,8 @@
+/* eslint-disable no-undef */
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import api from "../services/api";
-import { ArrowLeft, Phone, Mail, Receipt, Trash2 } from "lucide-react";
+import { ArrowLeft, Phone, Mail, Receipt, Trash2, Printer } from "lucide-react";
 
 function StudentDetail() {
   const { id } = useParams();
@@ -49,6 +50,43 @@ function StudentDetail() {
   const handleStatusChange = async (newStatus) => {
     await api.patch(`/students/${id}/status`, { status: newStatus });
     loadData();
+  };
+
+  const printReceipt = (payment) => {
+    const receiptWindow = window.open("", "_blank");
+    receiptWindow.document.write(`
+      <html>
+        <head>
+          <title>Receipt - ${payment.receiptNo || payment._id}</title>
+          <style>
+            body { font-family: Arial, sans-serif; padding: 40px; color: #111; }
+            .header { text-align: center; margin-bottom: 30px; }
+            .header h1 { color: #4F46E5; margin-bottom: 4px; }
+            .row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #eee; }
+            .label { color: #666; }
+            .value { font-weight: 600; }
+            .total { font-size: 20px; margin-top: 20px; padding-top: 20px; border-top: 2px solid #333; }
+          </style>
+        </head>
+        <body>
+          <div class="header">
+            <h1>GoCoaching</h1>
+            <p>Payment Receipt</p>
+          </div>
+          <div class="row"><span class="label">Receipt No.</span><span class="value">${payment.receiptNo || "-"}</span></div>
+          <div class="row"><span class="label">Date</span><span class="value">${new Date(payment.date).toLocaleDateString()}</span></div>
+          <div class="row"><span class="label">Student Name</span><span class="value">${student.name}</span></div>
+          <div class="row"><span class="label">Member ID</span><span class="value">${student.memberId}</span></div>
+          <div class="row"><span class="label">Payment Mode</span><span class="value">${payment.mode}</span></div>
+          <div class="row"><span class="label">Total Fee</span><span class="value">₹${payment.totalFee}</span></div>
+          <div class="row"><span class="label">Amount Paid</span><span class="value">₹${payment.paidAmount}</span></div>
+          <div class="row total"><span class="label">Due Amount</span><span class="value">₹${payment.dueAmount}</span></div>
+        </body>
+      </html>
+    `);
+    receiptWindow.document.close();
+    receiptWindow.focus();
+    receiptWindow.print();
   };
 
   if (!student) return <div className="p-8">Loading...</div>;
@@ -215,6 +253,13 @@ function StudentDetail() {
                     </p>
                   </div>
                   <span className="text-xs font-medium text-red-500">Due ₹{p.dueAmount}</span>
+                  <button
+                    onClick={() => printReceipt(p)}
+                    className="text-gray-300 hover:text-indigo-600"
+                    title="Print Receipt"
+                  >
+                    <Printer size={15} />
+                  </button>
                 </div>
               ))}
             </div>
