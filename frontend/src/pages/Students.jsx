@@ -1,7 +1,8 @@
+/* eslint-disable no-undef */
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../services/api";
-import { Search, Phone, DollarSign, Pencil } from "lucide-react";
+import { Search, Phone, DollarSign, Pencil, IdCard } from "lucide-react";
 
 function Students() {
   const navigate = useNavigate();
@@ -40,6 +41,73 @@ function Students() {
       s.name.toLowerCase().includes(search.toLowerCase()) ||
       s.memberId.toLowerCase().includes(search.toLowerCase())
   );
+
+  const printIdCard = (s) => {
+    const cardWindow = window.open("", "_blank");
+    cardWindow.document.write(`
+      <html>
+        <head>
+          <title>ID Card - ${s.name}</title>
+          <style>
+            body { font-family: Arial, sans-serif; display: flex; justify-content: center; padding: 40px; background: #f3f4f6; }
+            .card {
+              width: 340px;
+              border-radius: 16px;
+              overflow: hidden;
+              box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+              background: white;
+            }
+            .header {
+              background: linear-gradient(135deg, #4F46E5, #6366F1);
+              color: white;
+              padding: 20px 20px 55px;
+              text-align: center;
+            }
+            .header h2 { margin: 0; font-size: 18px; }
+            .header p { margin: 4px 0 0; font-size: 12px; opacity: 0.85; }
+            .photo {
+              width: 90px;
+              height: 90px;
+              border-radius: 50%;
+              object-fit: cover;
+              border: 4px solid white;
+              margin: -45px auto 10px;
+              display: block;
+              background: #e5e7eb;
+              position: relative;
+              z-index: 1;
+            }
+            .body { padding: 10px 24px 24px; text-align: center; }
+            .name { font-size: 18px; font-weight: bold; margin: 4px 0; }
+            .id { color: #6366F1; font-size: 13px; margin-bottom: 16px; }
+            .row { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid #eee; font-size: 13px; }
+            .label { color: #888; }
+            .value { font-weight: 600; }
+          </style>
+        </head>
+        <body>
+          <div class="card">
+            <div class="header">
+              <h2>GoCoaching</h2>
+              <p>Student ID Card</p>
+            </div>
+            ${s.photoUrl ? `<img class="photo" src="${s.photoUrl}" />` : `<div class="photo"></div>`}
+            <div class="body">
+              <p class="name">${s.name}</p>
+              <p class="id">${s.memberId}</p>
+              <div class="row"><span class="label">Mobile</span><span class="value">${s.mobile || "-"}</span></div>
+              <div class="row"><span class="label">Batch</span><span class="value">${s.batch?.name || "-"}</span></div>
+              <div class="row"><span class="label">Join Date</span><span class="value">${s.joinDate ? new Date(s.joinDate).toLocaleDateString() : "-"}</span></div>
+              <div class="row"><span class="label">Status</span><span class="value">${s.status}</span></div>
+            </div>
+          </div>
+        </body>
+      </html>
+    `);
+    cardWindow.document.close();
+    cardWindow.focus();
+    cardWindow.print();
+  };
 
   const statusStyle = {
     live: "bg-green-50 text-green-700",
@@ -145,6 +213,13 @@ function Students() {
                   >
                     <Pencil size={13} />
                     Edit
+                  </button>
+                  <button
+                    onClick={() => printIdCard(s)}
+                    className="flex items-center gap-1.5 text-xs font-medium bg-indigo-50 text-indigo-700 px-3 py-1.5 rounded-lg hover:bg-indigo-100"
+                  >
+                    <IdCard size={13} />
+                    ID Card
                   </button>
                 </div>
               </div>
