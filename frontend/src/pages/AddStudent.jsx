@@ -15,6 +15,7 @@ function AddStudent() {
     batch: "",
     joinDate: "",
     endDate: "",
+    enrollmentFee: "",
   });
   const [photo, setPhoto] = useState(null);
   const [photoPreview, setPhotoPreview] = useState(null);
@@ -25,6 +26,12 @@ function AddStudent() {
 
   useEffect(() => {
     api.get("/batches").then((res) => setBatches(res.data));
+    api.get("/enrollment-fees").then((res) => {
+      const defaultFee = res.data.find((f) => f.isDefault);
+      if (defaultFee) {
+        setForm((prev) => ({ ...prev, enrollmentFee: defaultFee.amount }));
+      }
+    });
   }, []);
 
   const handleChange = (e) => {
@@ -179,6 +186,17 @@ function AddStudent() {
               name="endDate"
               value={form.endDate}
               onChange={handleChange}
+              className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-indigo-500"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-500 mb-1.5">Enrollment Fee</label>
+            <input
+              name="enrollmentFee"
+              value={form.enrollmentFee}
+              onChange={handleChange}
+              type="number"
               className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-indigo-500"
             />
           </div>

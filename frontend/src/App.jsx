@@ -20,6 +20,7 @@ import ManagePermissions from "./pages/ManagePermissions";
 import Notices from "./pages/Notices";
 import ProfileSettings from "./pages/ProfileSettings";
 import StudentProfile from "./pages/StudentProfile";
+import EnrollmentFees from "./pages/EnrollmentFees";
 
 function AppLayout({ collapsed, setCollapsed }) {
   const location = useLocation();
@@ -140,6 +141,14 @@ function AppLayout({ collapsed, setCollapsed }) {
             element={
               <ProtectedRoute path="/notices">
                 <Notices />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/enrollment-fees"
+            element={
+              <ProtectedRoute path="/enrollment-fees">
+                <EnrollmentFees />
               </ProtectedRoute>
             }
           />

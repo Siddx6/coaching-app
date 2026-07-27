@@ -28,6 +28,7 @@ function Navbar({ collapsed, setCollapsed }) {
   const allLinks = [
     { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard, key: null },
     { to: "/master", label: "Master Setup", icon: BookOpen, key: "masterSetup" },
+    { to: "/enrollment-fees", label: "Enrollment Fees", icon: Wallet, key: "masterSetup" },
     { to: "/students", label: "Students", icon: Users, key: "students" },
     { to: "/students/add", label: "Add Student", icon: UserPlus, key: "students" },
     { to: "/batches", label: "Batches", icon: Layers, key: "batches" },

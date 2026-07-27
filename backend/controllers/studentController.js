@@ -2,6 +2,7 @@ const Student = require("../models/Student");
 
 const createStudent = async (req, res) => {
   try {
+    const Payment = require("../models/Payment");
     const body = req.body;
 
     let photoUrl = "";
@@ -21,6 +22,18 @@ const createStudent = async (req, res) => {
       photoUrl,
       documents,
     });
+
+    const enrollmentFee = Number(body.enrollmentFee) || 0;
+    if (enrollmentFee > 0) {
+      await Payment.create({
+        student: student._id,
+        totalFee: enrollmentFee,
+        paidAmount: 0,
+        dueAmount: enrollmentFee,
+        mode: "enrollment",
+        receiptNo: "ENROLL-" + student.memberId,
+      });
+    }
 
     res.status(201).json(student);
   } catch (err) {

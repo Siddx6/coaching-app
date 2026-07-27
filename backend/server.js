@@ -16,6 +16,7 @@ const enquiryRoutes = require("./routes/enquiryRoutes");
 const reportRoutes = require("./routes/reportRoutes");
 const adminRoutes = require("./routes/adminRoutes");
 const noticeRoutes = require("./routes/noticeRoutes");
+const enrollmentFeeRoutes = require("./routes/enrollmentFeeRoutes");
 
 const app = express();
 
@@ -36,7 +37,7 @@ app.use("/api/enquiries", enquiryRoutes);
 app.use("/api/reports", reportRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/notices", noticeRoutes);
-
+app.use("/api/enrollment-fees", enrollmentFeeRoutes);
 
 app.get("/", (req, res) => {
   res.send("Coaching App API is running");
