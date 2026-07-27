@@ -162,6 +162,7 @@ function StudentDetail() {
             <option value="live">Live</option>
             <option value="demo">Demo</option>
             <option value="expired">Expired</option>
+            <option value="blocked">Blocked</option>
           </select>
         </div>
       </div>

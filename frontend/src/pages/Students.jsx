@@ -112,6 +112,7 @@ function Students() {
     live: "bg-green-50 text-green-700",
     demo: "bg-amber-50 text-amber-700",
     expired: "bg-red-50 text-red-700",
+    blocked: "bg-gray-200 text-gray-700",
   };
 
   return (

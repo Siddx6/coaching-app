@@ -22,7 +22,7 @@ const studentSchema = new mongoose.Schema(
     discount: { type: Number, default: 0 },
     joinDate: { type: Date },
     endDate: { type: Date },
-    status: { type: String, enum: ["live", "demo", "expired"], default: "live" },
+    status: { type: String, enum: ["live", "demo", "expired", "blocked"], default: "live" },
     documents: [{ type: String }],
     remark: { type: String },
   },
