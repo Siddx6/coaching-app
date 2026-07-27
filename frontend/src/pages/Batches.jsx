@@ -1,5 +1,4 @@
-/* eslint-disable no-undef */
-import { useEffect, useState } from "react";
+ import { useEffect, useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import api from "../services/api";
 import { Plus, Layers, Pencil, Trash2, X, QrCode } from "lucide-react";
