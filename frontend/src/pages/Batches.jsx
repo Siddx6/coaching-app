@@ -1,7 +1,9 @@
+/* eslint-disable no-undef */
 import { useEffect, useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import api from "../services/api";
-import { Plus, Layers, Pencil, Trash2, X } from "lucide-react";
+import { Plus, Layers, Pencil, Trash2, X, QrCode } from "lucide-react";
+import { QRCodeSVG } from "qrcode.react";
 
 function Batches() {
   const { user } = useAuth();
@@ -13,6 +15,7 @@ function Batches() {
   const [error, setError] = useState("");
   const [editingBatch, setEditingBatch] = useState(null);
   const [editForm, setEditForm] = useState({ subCourse: "", name: "", monthlyFee: "", oneTimeFee: "", status: "live" });
+  const [qrBatch, setQrBatch] = useState(null);
 
   const loadBatches = () => {
     setLoading(true);
@@ -245,9 +248,43 @@ function Batches() {
                 <p className="text-sm text-gray-400 mt-1">
                   ₹{b.monthlyFee}/mo &middot; ₹{b.oneTimeFee} one-time
                 </p>
+                <button
+                  onClick={() => setQrBatch(b)}
+                  className="flex items-center gap-1.5 text-xs font-medium bg-indigo-50 text-indigo-700 px-3 py-1.5 rounded-lg hover:bg-indigo-100 mt-3"
+                >
+                  <QrCode size={13} />
+                  View QR
+                </button>
               </div>
             )
           )}
+        </div>
+      )}
+
+      {qrBatch && (
+        <div
+          className="fixed inset-0 bg-black/40 flex items-center justify-center z-50"
+          onClick={() => setQrBatch(null)}
+        >
+          <div
+            className="bg-white rounded-2xl p-8 max-w-sm w-full mx-4 text-center"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              onClick={() => setQrBatch(null)}
+              className="float-right text-gray-400 hover:text-gray-600"
+            >
+              <X size={18} />
+            </button>
+            <h2 className="font-semibold text-gray-900 mb-1">{qrBatch.name}</h2>
+            <p className="text-xs text-gray-400 mb-6">
+              {qrBatch.subCourse?.course?.name} &rsaquo; {qrBatch.subCourse?.name}
+            </p>
+            <div className="flex justify-center mb-4">
+              <QRCodeSVG value={qrBatch._id} size={180} />
+            </div>
+            <p className="text-xs text-gray-400">Batch ID: {qrBatch._id}</p>
+          </div>
         </div>
       )}
     </div>
