@@ -25,6 +25,7 @@ function EditStudent() {
           batch: s.batch?._id || "",
           joinDate: s.joinDate ? s.joinDate.split("T")[0] : "",
           endDate: s.endDate ? s.endDate.split("T")[0] : "",
+          password: "",
         });
       }
     });
@@ -137,6 +138,18 @@ function EditStudent() {
               name="endDate"
               value={form.endDate}
               onChange={handleChange}
+              className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-indigo-500"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-500 mb-1.5">Portal Password</label>
+            <input
+              type="password"
+              name="password"
+              value={form.password}
+              onChange={handleChange}
+              placeholder="Leave blank to keep unchanged"
               className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-indigo-500"
             />
           </div>

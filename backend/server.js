@@ -17,6 +17,7 @@ const reportRoutes = require("./routes/reportRoutes");
 const adminRoutes = require("./routes/adminRoutes");
 const noticeRoutes = require("./routes/noticeRoutes");
 const enrollmentFeeRoutes = require("./routes/enrollmentFeeRoutes");
+const studentAuthRoutes = require("./routes/studentAuthRoutes");
 
 const app = express();
 
@@ -27,6 +28,7 @@ app.use(express.json());
 
 app.use("/api/auth", authRoutes);
 app.use("/api/courses", courseRoutes);
+app.use("/api/student-auth", studentAuthRoutes);
 app.use("/api/subcourses", subCourseRoutes);
 app.use("/api/batches", batchRoutes);
 app.use("/api/students", studentRoutes);

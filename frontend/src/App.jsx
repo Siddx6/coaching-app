@@ -1,6 +1,12 @@
 import { useState } from "react";
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
+import { StudentAuthProvider } from "./context/StudentAuthContext";
+import StudentLogin from "./pages/StudentLogin";
+import StudentPortal from "./pages/StudentPortal";
+import StudentAttendance from "./pages/StudentAttendance";
+import StudentProfilePage from "./pages/StudentProfilePage";
+import StudentNavbar from "./components/StudentNavbar";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Navbar from "./components/Navbar";
 import Login from "./pages/Login";
@@ -180,10 +186,50 @@ function App() {
 
   return (
     <AuthProvider>
-      <BrowserRouter>
-        <AppLayout collapsed={collapsed} setCollapsed={setCollapsed} />
-      </BrowserRouter>
+      <StudentAuthProvider>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/student/login" element={<StudentLogin />} />
+            <Route
+              path="/student/dashboard"
+              element={
+                <StudentPortalGuard>
+                  <StudentPortal />
+                </StudentPortalGuard>
+              }
+            />
+            <Route
+              path="/student/attendance"
+              element={
+                <StudentPortalGuard>
+                  <StudentAttendance />
+                </StudentPortalGuard>
+              }
+            />
+            <Route
+              path="/student/profile"
+              element={
+                <StudentPortalGuard>
+                  <StudentProfilePage />
+                </StudentPortalGuard>
+              }
+            />
+            <Route path="/*" element={<AppLayout collapsed={collapsed} setCollapsed={setCollapsed} />} />
+          </Routes>
+        </BrowserRouter>
+      </StudentAuthProvider>
     </AuthProvider>
+  );
+}
+
+function StudentPortalGuard({ children }) {
+  const stored = localStorage.getItem("student");
+  if (!stored) return <Navigate to="/student/login" replace />;
+  return (
+    <>
+      <StudentNavbar />
+      {children}
+    </>
   );
 }
 

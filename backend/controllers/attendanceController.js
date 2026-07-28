@@ -30,4 +30,13 @@ const getAttendance = async (req, res) => {
   }
 };
 
-module.exports = { markAttendance, getAttendance };
+const getMyAttendance = async (req, res) => {
+  try {
+    const records = await Attendance.find({ student: req.student.studentId }).sort({ date: -1 });
+    res.json(records);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+module.exports = { markAttendance, getAttendance, getMyAttendance };

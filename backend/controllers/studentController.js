@@ -2,8 +2,13 @@ const Student = require("../models/Student");
 
 const createStudent = async (req, res) => {
   try {
+    const bcrypt = require("bcryptjs");
     const Payment = require("../models/Payment");
-    const body = req.body;
+    const body = { ...req.body };
+
+    if (body.password) {
+      body.password = await bcrypt.hash(body.password, 10);
+    }
 
     let photoUrl = "";
     let documents = [];
@@ -52,7 +57,14 @@ const getStudents = async (req, res) => {
 
 const updateStudent = async (req, res) => {
   try {
-    const student = await Student.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    const bcrypt = require("bcryptjs");
+    const body = { ...req.body };
+    if (body.password) {
+      body.password = await bcrypt.hash(body.password, 10);
+    } else {
+      delete body.password;
+    }
+    const student = await Student.findByIdAndUpdate(req.params.id, body, { new: true });
     if (!student) {
       return res.status(404).json({ message: "Student not found" });
     }

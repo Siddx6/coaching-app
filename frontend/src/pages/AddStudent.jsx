@@ -16,6 +16,7 @@ function AddStudent() {
     joinDate: "",
     endDate: "",
     enrollmentFee: "",
+    password: "",
   });
   const [photo, setPhoto] = useState(null);
   const [photoPreview, setPhotoPreview] = useState(null);
@@ -197,6 +198,18 @@ function AddStudent() {
               value={form.enrollmentFee}
               onChange={handleChange}
               type="number"
+              className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-indigo-500"
+            />
+          </div>
+          
+          <div>
+            <label className="block text-sm font-medium text-gray-500 mb-1.5">Portal Password</label>
+            <input
+              name="password"
+              value={form.password}
+              onChange={handleChange}
+              type="password"
+              placeholder="Set login password for student"
               className="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-indigo-500"
             />
           </div>
