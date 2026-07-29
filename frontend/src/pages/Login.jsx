@@ -84,8 +84,14 @@ function Login() {
               >
                 Log In
               </button>
+
+              <p className="text-center text-sm text-gray-500 pt-2">
+                Are you a student?{" "}
+                <a href="/student/login" className="text-indigo-600 font-medium hover:underline">
+                  Log in here
+                </a>
+              </p>
             </form>
-          </div>
 
           <div className="flex items-center justify-between text-sm text-gray-400 mt-14 w-full">
             <span>Copyright &copy; 2026 Coaching App LTD.</span>
@@ -93,6 +99,7 @@ function Login() {
           </div>
         </div>
       </div>
+    </div>
 
       {/* Right: Promo panel */}
       <div className="hidden lg:flex w-1/2 bg-indigo-600 relative overflow-hidden items-center justify-center p-12">
