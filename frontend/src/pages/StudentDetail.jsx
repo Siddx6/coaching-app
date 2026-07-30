@@ -119,7 +119,7 @@ function StudentDetail() {
         </div>
       </div>
 
-      <div className="bg-white rounded-2xl border border-gray-100 p-6 mb-6 flex items-center gap-5">
+      <div className="bg-white rounded-2xl border border-gray-100 p-6 mb-6 flex flex-col sm:flex-row sm:items-center gap-5">
         {student.photoUrl ? (
           <img
             src={student.photoUrl}
@@ -147,7 +147,7 @@ function StudentDetail() {
             )}
           </div>
         </div>
-        <div className="text-right space-y-2">
+        <div className="sm:text-right space-y-2">
           <div>
             <p className="text-xs text-gray-400">Current Due</p>
             <p className={`text-2xl font-bold ${latestDue > 0 ? "text-red-600" : "text-green-600"}`}>

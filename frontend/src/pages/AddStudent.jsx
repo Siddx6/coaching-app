@@ -82,7 +82,7 @@ function AddStudent() {
 
       <form
         onSubmit={handleSubmit}
-        className="bg-white rounded-2xl border border-gray-100 p-8 max-w-2xl"
+        className="bg-white rounded-2xl border border-gray-100 p-5 sm:p-8 max-w-2xl"
       >
         {error && (
           <p className="text-red-600 text-sm bg-red-50 rounded-lg py-2 px-3 mb-6">{error}</p>

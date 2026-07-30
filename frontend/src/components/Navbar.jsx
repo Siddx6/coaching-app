@@ -19,7 +19,7 @@ import {
   ChevronRight,
 } from "lucide-react";
 
-function Navbar({ collapsed, setCollapsed }) {
+function Navbar({ collapsed, setCollapsed, mobileOpen, setMobileOpen }) {
   const { user, logout } = useAuth();
   const location = useLocation();
 
@@ -48,11 +48,17 @@ function Navbar({ collapsed, setCollapsed }) {
     return !!user.permissions?.[link.key];
   });
 
+  const handleToggleClick = () => {
+    setMobileOpen(false);
+    setCollapsed((prev) => !prev);
+  };
+
   return (
     <div
-      className={`min-h-screen bg-white border-r border-gray-100 flex flex-col fixed left-0 top-0 z-20 transition-all duration-300 ease-in-out ${
-        collapsed ? "w-20" : "w-60"
-      }`}
+      className={`min-h-screen bg-white border-r border-gray-100 flex flex-col fixed left-0 top-0 z-40 transition-all duration-300 ease-in-out
+      ${collapsed ? "lg:w-20" : "lg:w-60"}
+      w-60
+      ${mobileOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}`}
     >
       <div className="flex items-center justify-between px-4 py-6">
         <div className="flex items-center gap-2 overflow-hidden">
@@ -61,7 +67,7 @@ function Navbar({ collapsed, setCollapsed }) {
           </svg>
           <span
             className={`font-bold text-lg text-gray-900 whitespace-nowrap transition-opacity duration-200 ${
-              collapsed ? "opacity-0 w-0" : "opacity-100"
+              collapsed ? "lg:opacity-0 lg:w-0" : "opacity-100"
             }`}
           >
             GoCoaching
@@ -70,28 +76,29 @@ function Navbar({ collapsed, setCollapsed }) {
       </div>
 
       <button
-        onClick={() => setCollapsed(!collapsed)}
-        className="absolute -right-3 top-8 w-6 h-6 bg-white border border-gray-200 rounded-full flex items-center justify-center text-gray-400 hover:text-indigo-600 shadow-sm"
+        onClick={handleToggleClick}
+        className="absolute -right-3 top-8 w-6 h-6 bg-white border border-gray-200 rounded-full flex items-center justify-center text-gray-400 hover:text-indigo-600 shadow-sm z-50"
       >
         {collapsed ? <ChevronRight size={14} /> : <ChevronLeft size={14} />}
       </button>
 
-      <nav className="flex-1 px-3 space-y-1">
+      <nav className="flex-1 px-3 space-y-1 overflow-y-auto">
         {links.map(({ to, label, icon: Icon }) => {
           const active = location.pathname === to;
           return (
             <Link
               key={to}
               to={to}
+              onClick={() => setMobileOpen(false)}
               title={collapsed ? label : undefined}
               className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
                 active ? "bg-gray-900 text-white" : "text-gray-500 hover:bg-gray-50"
-              } ${collapsed ? "justify-center" : ""}`}
+              } ${collapsed ? "lg:justify-center" : ""}`}
             >
               <Icon size={18} className="flex-shrink-0" />
               <span
                 className={`whitespace-nowrap transition-all duration-200 ${
-                  collapsed ? "opacity-0 w-0 overflow-hidden" : "opacity-100"
+                  collapsed ? "lg:opacity-0 lg:w-0 lg:overflow-hidden" : "opacity-100"
                 }`}
               >
                 {label}
@@ -104,26 +111,24 @@ function Navbar({ collapsed, setCollapsed }) {
       <div className="px-3 pb-6">
         <div
           className={`flex items-center gap-3 px-3 py-3 border-t border-gray-100 pt-4 ${
-            collapsed ? "justify-center" : ""
+            collapsed ? "lg:justify-center" : ""
           }`}
         >
           <div className="w-9 h-9 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-700 font-semibold text-sm flex-shrink-0">
             {user.name?.[0]}
           </div>
-          {!collapsed && (
-            <>
-              <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium text-gray-900 truncate">{user.name}</p>
-                <p className="text-xs text-gray-400 capitalize">{user.role}</p>
-              </div>
-              <Link to="/profile" className="text-gray-400 hover:text-indigo-600" title="Profile Settings">
-                <Settings size={17} />
-              </Link>
-              <button onClick={logout} className="text-gray-400 hover:text-red-600">
-                <LogOut size={17} />
-              </button>
-            </>
-          )}
+          <div className={collapsed ? "lg:hidden flex-1 min-w-0 flex items-center gap-3" : "flex-1 min-w-0 flex items-center gap-3"}>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-medium text-gray-900 truncate">{user.name}</p>
+              <p className="text-xs text-gray-400 capitalize">{user.role}</p>
+            </div>
+            <Link to="/profile" onClick={() => setMobileOpen(false)} className="text-gray-400 hover:text-indigo-600" title="Profile Settings">
+              <Settings size={17} />
+            </Link>
+            <button onClick={logout} className="text-gray-400 hover:text-red-600">
+              <LogOut size={17} />
+            </button>
+          </div>
         </div>
       </div>
     </div>

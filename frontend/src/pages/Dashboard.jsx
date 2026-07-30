@@ -78,7 +78,7 @@ function Dashboard() {
             All
           </span>
         </div>
-        <div className="grid grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
           {(() => {
             const maxVal = Math.max(stats.students.live, stats.students.demo, stats.students.expired, 1);
             const rows = [

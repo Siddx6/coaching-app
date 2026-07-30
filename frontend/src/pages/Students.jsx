@@ -117,7 +117,7 @@ function Students() {
 
   return (
     <div className="min-h-screen bg-gray-50 p-8">
-      <div className="flex items-center justify-between mb-8">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Students</h1>
           <p className="text-sm text-gray-400">{students.length} total students</p>
@@ -128,7 +128,7 @@ function Students() {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search students..."
-            className="pl-9 pr-4 py-2.5 border border-gray-200 rounded-lg text-sm w-64 outline-none focus:ring-2 focus:ring-indigo-500 bg-white"
+            className="pl-9 pr-4 py-2.5 border border-gray-200 rounded-lg text-sm w-full sm:w-64 outline-none focus:ring-2 focus:ring-indigo-500 bg-white"
           />
         </div>
       </div>
@@ -142,8 +142,11 @@ function Students() {
           {filtered.map((s) => {
             const d = dues[s._id] || { paid: 0, due: 0, total: 0 };
             return (
-              <div key={s._id} className="bg-white rounded-2xl border border-gray-100 p-5">
-                <div className="flex items-start justify-between mb-4">
+              <div
+                key={s._id}
+                className="bg-white rounded-2xl border border-gray-100 p-5"
+              >
+                <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3 mb-4">
                   <div className="flex items-center gap-4">
                     {s.photoUrl ? (
                       <img
@@ -199,7 +202,7 @@ function Students() {
                   </div>
                 </div>
 
-                <div className="flex gap-2 border-t border-gray-50 pt-4">
+                <div className="flex flex-wrap gap-2 border-t border-gray-50 pt-4">
                   <button
                     onClick={() => navigate(`/students/${s._id}`)}
                     className="flex items-center gap-1.5 text-xs font-medium bg-green-50 text-green-700 px-3 py-1.5 rounded-lg hover:bg-green-100"

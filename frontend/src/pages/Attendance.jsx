@@ -67,8 +67,8 @@ function Attendance() {
         <p className="text-sm text-gray-400">Mark daily attendance by batch</p>
       </div>
 
-      <div className="bg-white rounded-2xl border border-gray-100 p-6 mb-6 flex flex-wrap gap-4 items-end">
-        <div className="flex-1 min-w-[200px]">
+      <div className="bg-white rounded-2xl border border-gray-100 p-6 mb-6 flex flex-col sm:flex-row flex-wrap gap-4 sm:items-end">
+        <div className="w-full sm:flex-1 sm:min-w-[200px]">
           <label className="block text-sm font-medium text-gray-500 mb-1.5">Batch</label>
           <select
             value={selectedBatch}
@@ -83,7 +83,7 @@ function Attendance() {
             ))}
           </select>
         </div>
-        <div className="flex-1 min-w-[200px]">
+        <div className="w-full sm:flex-1 sm:min-w-[200px]">
           <label className="block text-sm font-medium text-gray-500 mb-1.5">Date</label>
           <input
             type="date"
@@ -121,7 +121,7 @@ function Attendance() {
           {batchStudents.map((s, i) => (
             <div
               key={s._id}
-              className={`flex items-center justify-between px-6 py-4 ${
+              className={`flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-6 py-4 ${
                 i !== batchStudents.length - 1 ? "border-b border-gray-100" : ""
               }`}
             >
@@ -138,7 +138,7 @@ function Attendance() {
                   <p className="text-xs text-gray-400">{s.memberId}</p>
                 </div>
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 flex-wrap">
                 {pending[s._id] && (
                   <span className="text-xs text-amber-600 font-medium">Unsaved</span>
                 )}

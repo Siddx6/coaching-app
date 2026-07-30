@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from "react-router-dom";
+import { Menu } from "lucide-react";
 import { AuthProvider } from "./context/AuthContext";
 import { StudentAuthProvider } from "./context/StudentAuthContext";
 import StudentLogin from "./pages/StudentLogin";
@@ -28,14 +29,41 @@ import ProfileSettings from "./pages/ProfileSettings";
 import StudentProfile from "./pages/StudentProfile";
 import EnrollmentFees from "./pages/EnrollmentFees";
 
-function AppLayout({ collapsed, setCollapsed }) {
+function AppLayout({ collapsed, setCollapsed, mobileOpen, setMobileOpen }) {
   const location = useLocation();
   const isLoginPage = location.pathname === "/login";
 
   return (
     <>
-      {!isLoginPage && <Navbar collapsed={collapsed} setCollapsed={setCollapsed} />}
-      <div className={isLoginPage ? "" : `transition-all duration-300 ease-in-out ${collapsed ? "ml-20" : "ml-60"}`}>
+      {!isLoginPage && (
+        <>
+          <Navbar
+            collapsed={collapsed}
+            setCollapsed={setCollapsed}
+            mobileOpen={mobileOpen}
+            setMobileOpen={setMobileOpen}
+          />
+          {mobileOpen && (
+            <div
+              className="fixed inset-0 bg-black/40 z-30 lg:hidden"
+              onClick={() => setMobileOpen(false)}
+            ></div>
+          )}
+          <button
+            onClick={() => setMobileOpen(true)}
+            className="lg:hidden fixed top-4 left-4 z-30 bg-white border border-gray-200 rounded-lg p-2 shadow-sm"
+          >
+            <Menu size={20} />
+          </button>
+        </>
+      )}
+      <div
+        className={
+          isLoginPage
+            ? ""
+            : `transition-all duration-300 ease-in-out pt-16 lg:pt-0 ${collapsed ? "lg:ml-20" : "lg:ml-60"}`
+        }
+      >
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route
@@ -183,6 +211,7 @@ function AppLayout({ collapsed, setCollapsed }) {
 
 function App() {
   const [collapsed, setCollapsed] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
     <AuthProvider>
@@ -214,7 +243,17 @@ function App() {
                 </StudentPortalGuard>
               }
             />
-            <Route path="/*" element={<AppLayout collapsed={collapsed} setCollapsed={setCollapsed} />} />
+            <Route
+              path="/*"
+              element={
+                <AppLayout
+                  collapsed={collapsed}
+                  setCollapsed={setCollapsed}
+                  mobileOpen={mobileOpen}
+                  setMobileOpen={setMobileOpen}
+                />
+              }
+            />
           </Routes>
         </BrowserRouter>
       </StudentAuthProvider>

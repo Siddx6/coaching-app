@@ -51,7 +51,7 @@ function Enquiries() {
 
   return (
     <div className="min-h-screen bg-gray-50 p-8">
-      <div className="flex items-center justify-between mb-8">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Enquiries</h1>
           <p className="text-sm text-gray-400">{enquiries.length} total enquiries</p>
@@ -128,7 +128,7 @@ function Enquiries() {
           {enquiries.map((e, i) => (
             <div
               key={e._id}
-              className={`flex items-center justify-between px-6 py-4 ${
+              className={`flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-6 py-4 ${
                 i !== enquiries.length - 1 ? "border-b border-gray-100" : ""
               }`}
             >
@@ -142,7 +142,7 @@ function Enquiries() {
                   <span>{e.source}</span>
                 </div>
               </div>
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-3 flex-wrap">
                 <span className={`px-3 py-1 rounded-full text-xs font-medium capitalize ${statusColor[e.status]}`}>
                   {e.status}
                 </span>
