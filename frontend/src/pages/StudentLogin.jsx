@@ -74,6 +74,13 @@ function StudentLogin() {
           >
             Log In
           </button>
+
+          <p className="text-center text-sm text-gray-500 pt-2">
+            Not a student?{" "}
+            <a href="/login" className="text-indigo-600 font-medium hover:underline">
+              Back to main login
+            </a>
+          </p>
         </form>
       </div>
     </div>

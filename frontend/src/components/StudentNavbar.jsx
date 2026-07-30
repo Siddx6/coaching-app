@@ -1,10 +1,10 @@
-import { Link, useLocation } from "react-router-dom";
-import { useStudentAuth } from "../context/StudentAuthContext";
+import { Link, useLocation, useNavigate } from "react-router-dom";import { useStudentAuth } from "../context/StudentAuthContext";
 import { LayoutDashboard, User, Calendar, LogOut } from "lucide-react";
 
 function StudentNavbar() {
   const { student, studentLogout } = useStudentAuth();
   const location = useLocation();
+  const navigate = useNavigate();
 
   if (!student) return null;
 
@@ -38,7 +38,13 @@ function StudentNavbar() {
           ))}
         </div>
       </div>
-      <button onClick={studentLogout} className="flex items-center gap-1.5 text-sm text-gray-500 hover:text-red-600">
+      <button
+        onClick={() => {
+          studentLogout();
+          navigate("/student/login");
+        }}
+        className="flex items-center gap-1.5 text-sm text-gray-500 hover:text-red-600"
+      >
         <LogOut size={15} />
         Logout
       </button>
