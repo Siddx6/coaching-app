@@ -105,7 +105,7 @@ function MasterSetup() {
       <div className="grid lg:grid-cols-2 gap-6">
         {/* Courses */}
         <div>
-          <div className="flex items-center justify-between mb-4">
+          <div className="flex flex-wrap items-center justify-between gap-2 mb-4">
             <h2 className="font-semibold text-gray-900">Courses</h2>
             <button
               onClick={() => setShowCourseForm(!showCourseForm)}
@@ -195,7 +195,7 @@ function MasterSetup() {
 
         {/* SubCourses */}
         <div>
-          <div className="flex items-center justify-between mb-4">
+          <div className="flex flex-wrap items-center justify-between gap-2 mb-4">
             <h2 className="font-semibold text-gray-900">Sub-Courses</h2>
             <button
               onClick={() => setShowSubForm(!showSubForm)}

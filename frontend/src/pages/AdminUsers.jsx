@@ -55,7 +55,7 @@ function AdminUsers() {
 
   return (
     <div className="min-h-screen bg-gray-50 p-8">
-      <div className="flex items-center justify-between mb-8">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Users</h1>
           <p className="text-sm text-gray-400">{users.length} team members</p>
@@ -144,7 +144,7 @@ function AdminUsers() {
           {users.map((u, i) => (
             <div
               key={u._id}
-              className={`flex items-center justify-between px-6 py-4 ${
+              className={`flex flex-wrap items-center justify-between gap-2 px-6 py-4 ${
                 i !== users.length - 1 ? "border-b border-gray-100" : ""
               }`}
             >

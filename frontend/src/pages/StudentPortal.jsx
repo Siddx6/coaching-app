@@ -19,7 +19,7 @@ function StudentPortal() {
 
   return (
     <div className="min-h-screen bg-gray-50 p-8">
-      <div className="bg-white rounded-2xl border border-gray-100 p-6 mb-6 flex items-center gap-5">
+      <div className="bg-white rounded-2xl border border-gray-100 p-6 mb-6 flex flex-col sm:flex-row sm:items-center gap-5">
         {student.photoUrl ? (
           <img src={student.photoUrl} alt={student.name} className="w-16 h-16 rounded-full object-cover" />
         ) : (
@@ -35,7 +35,7 @@ function StudentPortal() {
             {student.email && <span className="flex items-center gap-1.5"><Mail size={14} /> {student.email}</span>}
           </div>
         </div>
-        <div className="text-right">
+        <div className="sm:text-right">
           <p className="text-xs text-gray-400">Current Due</p>
           <p className={`text-2xl font-bold ${latestDue > 0 ? "text-red-600" : "text-green-600"}`}>₹{latestDue}</p>
         </div>
@@ -52,7 +52,7 @@ function StudentPortal() {
         </div>
       </div>
 
-      <div className="grid md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="bg-white rounded-2xl border border-gray-100 p-6">
           <h2 className="font-semibold text-gray-900 mb-4">Payment History</h2>
           {payments.length === 0 ? (
@@ -86,9 +86,9 @@ function StudentPortal() {
                   <div className="w-9 h-9 rounded-lg bg-indigo-50 flex items-center justify-center flex-shrink-0">
                     <Bell size={16} className="text-indigo-600" />
                   </div>
-                  <div>
+                  <div className="min-w-0 flex-1">
                     <p className="text-sm font-medium text-gray-900">{n.title}</p>
-                    <p className="text-sm text-gray-600">{n.message}</p>
+                    <p className="text-sm text-gray-600 break-words">{n.message}</p>
                   </div>
                 </div>
               ))}

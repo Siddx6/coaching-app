@@ -24,7 +24,7 @@ function StudentLogin() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 p-6">
-      <div className="w-full max-w-sm bg-white rounded-2xl border border-gray-100 p-8">
+      <div className="w-full max-w-sm bg-white rounded-2xl border border-gray-100 p-6 sm:p-8">
         <div className="flex items-center gap-2 mb-8">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
             <path d="M12 2L14 9L21 9L15.5 13.5L17.5 21L12 16.5L6.5 21L8.5 13.5L3 9L10 9L12 2Z" fill="#4F46E5"/>

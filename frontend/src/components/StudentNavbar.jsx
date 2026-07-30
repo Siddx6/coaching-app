@@ -15,15 +15,15 @@ function StudentNavbar() {
   ];
 
   return (
-    <nav className="bg-white border-b border-gray-100 px-8 py-4 flex items-center justify-between">
-      <div className="flex items-center gap-8">
+    <nav className="bg-white border-b border-gray-100 px-4 sm:px-8 py-4 flex flex-wrap items-center justify-between gap-3">
+      <div className="flex items-center gap-4 sm:gap-8 flex-wrap">
         <div className="flex items-center gap-2">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
             <path d="M12 2L14 9L21 9L15.5 13.5L17.5 21L12 16.5L6.5 21L8.5 13.5L3 9L10 9L12 2Z" fill="#4F46E5"/>
           </svg>
           <span className="font-bold text-gray-900">GoCoaching</span>
         </div>
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-1 flex-wrap">
           {links.map(({ to, label, icon: Icon }) => (
             <Link
               key={to}
