@@ -52,7 +52,7 @@ function Notices() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-8">
+    <div className="min-h-screen bg-gray-50 p-4 sm:p-8">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Notices</h1>
@@ -123,15 +123,15 @@ function Notices() {
       ) : notices.length === 0 ? (
         <p className="text-gray-400">No notices yet.</p>
       ) : (
-        <div className="grid gap-4 max-w-3xl">
+        <div className="grid gap-4 max-w-3xl w-full">
           {notices.map((n) => (
-            <div key={n._id} className="bg-white rounded-2xl border border-gray-100 p-5">
+            <div key={n._id} className="bg-white rounded-2xl border border-gray-100 p-5 w-full max-w-full overflow-hidden">
               <div className="flex items-start gap-3">
                 <div className="w-9 h-9 rounded-lg bg-indigo-50 flex items-center justify-center flex-shrink-0">
                   <Bell size={16} className="text-indigo-600" />
                 </div>
-                <div className="flex-1">
-                  <div className="flex items-center gap-2 mb-1">
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-center gap-2 mb-1 flex-wrap">
                     <p className="font-semibold text-gray-900 text-sm">{n.title}</p>
                     <span
                       className={`px-2 py-0.5 rounded-full text-xs font-medium capitalize ${audienceStyle[n.audience]}`}
@@ -139,11 +139,11 @@ function Notices() {
                       {n.audience}
                     </span>
                   </div>
-                  <p className="text-sm text-gray-600">{n.message}</p>
+                  <p className="text-sm text-gray-600 break-words">{n.message}</p>
                   <p className="text-xs text-gray-400 mt-2">{new Date(n.createdAt).toLocaleDateString()}</p>
                 </div>
                 {user?.role === "admin" && (
-                  <button onClick={() => handleDelete(n._id)} className="text-gray-300 hover:text-red-600">
+                  <button onClick={() => handleDelete(n._id)} className="text-gray-300 hover:text-red-600 flex-shrink-0">
                     <Trash2 size={15} />
                   </button>
                 )}
